@@ -1,10 +1,7 @@
-import LandingPage from "@/app/landingPage";
+import {getUser} from "@/utils/supabase/server";
 
-export default function Home(){
+export default async function Home(){
+    const {userData} = await getUser();
 
-    return (
-        <main>
-            <LandingPage/>
-        </main>
-    )
+    return <pre>{JSON.stringify(userData, null, 2)}</pre>
 }

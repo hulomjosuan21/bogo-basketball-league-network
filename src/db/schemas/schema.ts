@@ -1,1 +1,2 @@
-export * from "./userTable"
+export * from "./userDataTable"
+export * from "./adminDataTable"
