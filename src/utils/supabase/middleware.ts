@@ -46,6 +46,14 @@ export async function updateSession(request: NextRequest) {
         return NextResponse.redirect(url);
     }
 
+    const { data: barangayData } = user
+        ? await supabase
+            .from("adminData")
+            .select()
+            .eq('userId', user.id)
+            .single()
+        : { data: null };
+
     const { data: userData } = user
         ? await supabase
             .from("usersData")
@@ -54,27 +62,28 @@ export async function updateSession(request: NextRequest) {
             .single()
         : { data: null };
 
-    const userRole = userData?.role as string | undefined;
+    const role = barangayData?.role || userData?.role || undefined;
+    console.log(`Role in middleware ${role?.toString()}`)
 
-    if (!userRole && pathname !== '/' && !pathname.startsWith('/auth')) {
+    if (!role && pathname !== '/' && !pathname.startsWith('/auth')) {
         const url = request.nextUrl.clone();
         url.pathname = '/';
         return NextResponse.redirect(url);
     }
 
     const roleRoutes: Record<string, string[]> = {
-        player: [`/${RoleTypes.Player}`],
-        coach: [`/${RoleTypes.Coach}`],
-        // barangayAdmin: [`/${RoleTypes.BarangayAdmin}`],
-        // super: [`/${RoleTypes.SUPER}`],
+        player: [`/${RoleTypes.Player}`,`/onboard/${RoleTypes.Player}`],
+        coach: [`/${RoleTypes.Coach}`,`/onboard/${RoleTypes.Coach}`],
+        barangayAdmin: [`/${RoleTypes.BarangayAdmin}`],
+        super: [`/${RoleTypes.SUPER}`],
     };
 
-    const allowedRoutes = roleRoutes[userRole || ''] || [];
+    const allowedRoutes = roleRoutes[role || ''] || [];
     const isAllowed = allowedRoutes.some((route: string) => pathname.startsWith(route));
 
     // !pathname.startsWith(`/${RoleTypes.BarangayAdmin}`)
 
-    if (!isAllowed && pathname !== '/' && !pathname.startsWith('/auth') && !pathname.startsWith(`/${RoleTypes.BarangayAdmin}`)) {
+    if (!isAllowed && pathname !== '/' && !pathname.startsWith('/auth')) {
         const url = request.nextUrl.clone();
         url.pathname = '/';
         return NextResponse.redirect(url);

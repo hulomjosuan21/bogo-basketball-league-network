@@ -1,5 +1,5 @@
 'use client'
-import NavbarOne from "@/components/navbars";
+import {NavbarOne} from "@/components/app-navbars";
 import Form from "next/form";
 import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import Link from "next/link";
@@ -12,17 +12,19 @@ import {useTransition} from "react";
 import {LoadingButton} from "@/components/dynamic-button";
 import {LoaderCircle} from "lucide-react";
 import PasswordInput from "@/components/password-input";
+import useAppToast from "@/hooks/use-appToast";
 
 export default function Page(){
     const [isPending, startTransition] = useTransition()
+    const { showToast } = useAppToast()
 
     const handleFormAction = async (formData: FormData) => {
         startTransition(async () => {
             const {errorMessage} = await signinUserAction(formData);
             if(!errorMessage){
-                alert('Signed in successfully')
+                showToast("Account", "Signed in successfully", "default");
             }else {
-                alert(errorMessage)
+                showToast("Account error", errorMessage.message, "destructive");
             }
         });
     }

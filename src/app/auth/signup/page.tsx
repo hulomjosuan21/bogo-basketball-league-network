@@ -1,5 +1,5 @@
 'use client'
-import NavbarOne from "@/components/navbars";
+import {NavbarOne} from "@/components/app-navbars";
 import Form from "next/form";
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
@@ -20,17 +20,20 @@ import {LoadingButton} from "@/components/dynamic-button";
 import {LoaderCircle} from "lucide-react";
 import {useTransition} from "react";
 import PasswordInput from "@/components/password-input";
+import useAppToast from "@/hooks/use-appToast";
 
 export default function Page(){
     const [isPending, startTransition] = useTransition()
+    const { showToast } = useAppToast();
 
     const handleFormAction = async (formData: FormData) => {
         startTransition(async () => {
             const {errorMessage} = await userSignupAction(formData);
             if(!errorMessage){
                 alert('Account created successfully')
+                showToast("Account", "Created successfully", "default");
             }else {
-                alert(errorMessage)
+                showToast("Account error", errorMessage as string, "destructive");
             }
         });
     }

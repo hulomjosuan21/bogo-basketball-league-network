@@ -1,7 +1,7 @@
 export default function Page(){
     return (
         <main>
-            Player Page
+            League Page
         </main>
     )
 }

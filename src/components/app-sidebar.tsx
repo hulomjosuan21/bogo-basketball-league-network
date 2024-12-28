@@ -1,20 +1,128 @@
 import {
     Sidebar,
-    SidebarContent,
-    SidebarFooter,
-    SidebarGroup,
-    SidebarHeader,
+    SidebarContent, SidebarFooter,
+    SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader,
+    SidebarMenu, SidebarMenuButton, SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import Link from "next/link";
+import {
+    LayoutDashboard,
+    UsersRound,
+    Waypoints,
+    PersonStanding,
+    Workflow,
+    CalendarCheck2,
+    LogOut, ShieldAlert
+} from "lucide-react";
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
+import favicon from "@/assets/favicon.png"
+import {signOutAction} from "@/actions/appActions";
 
-export function AppSidebar() {
+const managementItems = [
+    {
+        title: "League",
+        url: "/barangayAdmin/page/league",
+        icon: Waypoints
+    },
+    {
+        title: "Player",
+        url: "/barangayAdmin/page/players",
+        icon: PersonStanding
+    },
+    {
+        title: "Team",
+        url: "/barangayAdmin/page/team",
+        icon: UsersRound
+    },
+    {
+        title: "Bracket",
+        url: "/barangayAdmin/page/bracket",
+        icon: Workflow
+    },
+    {
+        title: "Schedule Game",
+        url: "/barangayAdmin/page/schedule",
+        icon: CalendarCheck2
+    }
+]
+
+type Props = {
+    barangayName?: string;
+    barangayImage?: string;
+}
+
+export function BarangayAppSidebar({barangayName,barangayImage}:Props) {
+
+    const handleSignOut = async () => {
+        'use server'
+        await signOutAction()
+    }
+
     return (
         <Sidebar>
-            <SidebarHeader />
+            <SidebarHeader>
+                <SidebarMenu>
+                    <SidebarMenuButton
+                        size="lg"
+                        className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                    >
+                        <div className="flex items-center justify-center">
+                            <Avatar className={'aspect-square size-8 rounded-none'}>
+                                <AvatarImage src={barangayImage || favicon.src} />
+                                <AvatarFallback></AvatarFallback>
+                            </Avatar>
+                        </div>
+                        <div className="grid flex-1 text-left text-sm leading-tight">
+                            <span className="truncate font-semibold">
+                              {barangayName || "Barangay Name"}
+                            </span>
+                        </div>
+                    </SidebarMenuButton>
+                </SidebarMenu>
+            </SidebarHeader>
             <SidebarContent>
-                <SidebarGroup />
-                <SidebarGroup />
+                <SidebarGroup>
+                    <SidebarMenuButton asChild>
+                        <Link href={'/barangayAdmin'}>
+                            <LayoutDashboard/>
+                            <span>Dashboard</span>
+                        </Link>
+                    </SidebarMenuButton>
+                    <SidebarMenuButton asChild>
+                        <Link href={'/barangayAdmin/page/administration'}>
+                            <ShieldAlert/>
+                            <span>Administration</span>
+                        </Link>
+                    </SidebarMenuButton>
+                </SidebarGroup>
+
+                <SidebarGroup>
+                    <SidebarGroupLabel>Manage</SidebarGroupLabel>
+                    <SidebarGroupContent>
+                        <SidebarMenu>
+                            {managementItems.map((item) => (
+                                <SidebarMenuItem key={item.title}>
+                                    <SidebarMenuButton asChild>
+                                        <a href={item.url}>
+                                            <item.icon />
+                                            <span>{item.title}</span>
+                                        </a>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            ))}
+                        </SidebarMenu>
+                    </SidebarGroupContent>
+                </SidebarGroup>
             </SidebarContent>
-            <SidebarFooter />
+
+            <SidebarFooter>
+                <SidebarMenu>
+                    <SidebarMenuButton onClick={handleSignOut}>
+                        <LogOut />
+                        <span>Sign out</span>
+                    </SidebarMenuButton>
+                </SidebarMenu>
+            </SidebarFooter>
         </Sidebar>
     )
 }

@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, date } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, date, boolean } from "drizzle-orm/pg-core";
 import RoleTypes from "@/types/roleTypes";
 
 export const adminDataTable = pgTable("adminData", {
@@ -9,8 +9,10 @@ export const adminDataTable = pgTable("adminData", {
     address: text("address").notNull(),
     phoneNumber: text("phoneNumber").notNull(),
     role: text("role").default(RoleTypes.BarangayAdmin).notNull(),
+    barangayImage: text("barangayImage"),
     createdAt: date("createdAt").defaultNow().notNull(),
     updatedAt: date("updatedAt").defaultNow().notNull(),
+    isAllowed: boolean("isAllowed").default(false).notNull()
 });
 
 export type SelectAdminDataType = typeof adminDataTable.$inferSelect;

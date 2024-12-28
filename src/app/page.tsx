@@ -1,7 +1,11 @@
-import {getUser} from "@/utils/supabase/server";
+import LandingPage from "@/app/landingPage";
+import {LandingPageNavbar} from "@/components/app-navbars";
 
-export default async function Home(){
-    const {userData} = await getUser();
-
-    return <pre>{JSON.stringify(userData, null, 2)}</pre>
+export default function Page(){
+    return (
+        <main>
+            <LandingPageNavbar/>
+            <LandingPage/>
+        </main>
+    )
 }

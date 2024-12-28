@@ -1,7 +1,7 @@
 export default function Page(){
     return (
         <main>
-            Brackets Page
+            Administration Page
         </main>
     )
 }

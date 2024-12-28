@@ -29,7 +29,6 @@ export default function AppDock({dockItems}:Props) {
                     aria-label={text}
                     className={cn(
                         buttonVariants({ variant: "ghost", size: "icon" }),
-                        "rounded-full",
                     )}
                 >
                     <Icon className={'icon-sm'}/>
@@ -67,17 +66,23 @@ export default function AppDock({dockItems}:Props) {
                         </TooltipContent>
                     </Tooltip>
                 </DockIcon>
-                <Separator orientation={'vertical'} className={'h-full'}/>
                 {
-                    dockItems.map((item,index) => (
-                        <DockIcon key={index}>
-                            <DockItem Icon={item.Icon} text={item.text} url={item.url}/>
-                        </DockIcon>
-                    ))
+                    dockItems.length > 0 && (
+                        <>
+                            <Separator orientation={'vertical'} className={'h-full'}/>
+                            {
+                                dockItems.map((item,index) => (
+                                    <DockIcon key={index}>
+                                        <DockItem Icon={item.Icon} text={item.text} url={item.url}/>
+                                    </DockIcon>
+                                ))
+                            }
+                            <Separator orientation={'vertical'} className={'h-full'}/>
+                        </>
+                    )
                 }
-                <Separator orientation={'vertical'} className={'h-full'}/>
                 <DockIcon>
-                    <ToggleTheme btnClassName={'rounded-full'} btnVariant={'ghost'}/>
+                    <ToggleTheme btnVariant={'ghost'}/>
                 </DockIcon>
             </Dock>
         </TooltipProvider>

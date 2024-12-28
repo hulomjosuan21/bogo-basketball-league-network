@@ -11,6 +11,7 @@ export const usersDataTable = pgTable("usersData", {
     address: text("address").notNull(),
     phoneNumber: text("phoneNumber").notNull(),
     dateOfBirth: date("dateOfBirth").notNull(),
+    userImage: text("userImage"),
     role: userRoleEnum("role").notNull(),
     createdAt: date("createdAt").defaultNow().notNull(),
     updatedAt: date("updatedAt").defaultNow().notNull(),

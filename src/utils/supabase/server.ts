@@ -77,7 +77,7 @@ export async function getUser(){
         .eq('userId', user?.id)
         .single();
 
-    return { user, userData};
+    return { user, userData, isSignedIn: !!user };
 }
 
 export async function createClient() {

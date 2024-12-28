@@ -14,15 +14,16 @@ import {
 
 type Props = {
     btnClassName?: string
-    btnVariant?: "link" | "default" | "destructive" | "outline" | "secondary" | "ghost" | null | undefined
+    btnVariant?: "link" | "default" | "destructive" | "outline" | "secondary" | "ghost" | null | undefined,
+    btnSize?: "default" | "icon" | "sm" | "lg" | null | undefined
 }
 
-export function ToggleTheme({ btnClassName, btnVariant = 'default' }: Props) {
+export function ToggleTheme({ btnClassName, btnVariant = 'default', btnSize = 'icon' }: Props) {
     const { setTheme } = useTheme()
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant={btnVariant} size="icon" className={btnClassName}>
+                <Button variant={btnVariant} size={btnSize} className={btnClassName}>
                     <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
                     <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
                     <span className="sr-only">Toggle theme</span>

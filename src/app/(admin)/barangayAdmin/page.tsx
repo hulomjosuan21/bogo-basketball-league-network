@@ -1,5 +1,7 @@
 export default function Page(){
     return (
-        <main></main>
+        <main className={'h-[400vh]'}>
+
+        </main>
     )
 }
