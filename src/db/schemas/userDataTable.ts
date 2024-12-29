@@ -6,6 +6,7 @@ export const userRoleEnum =pgEnum("role_type", [RoleTypes.Player,RoleTypes.Coach
 export const usersDataTable = pgTable("usersData", {
     id: uuid("id").defaultRandom().primaryKey(),
     userId: text("userId").notNull().unique(),
+    email: text("email").notNull().unique(),
     firstName: text("firstName").notNull(),
     lastName: text("lastName").notNull(),
     address: text("address").notNull(),

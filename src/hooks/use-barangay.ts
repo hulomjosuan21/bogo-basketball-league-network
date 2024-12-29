@@ -1,11 +1,11 @@
 import {useState,useEffect} from "react";
 import {User} from "@supabase/auth-js";
 import AppToolkit from "@/lib/app-toolkit";
-import Coach from "@/types/coachType";
-import {getCoach} from "@/actions/coachActions";
+import {getBarangay} from "@/actions/barangayActions";
+import Barangay from "@/types/barangayType";
 
-export default function useCoach() {
-    const [coach, setCoach] = useState<Coach | null>(null);
+export default function useBarangay() {
+    const [barangay, setBarangay] = useState<Barangay | null>(null);
     const [user, setUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -14,9 +14,9 @@ export default function useCoach() {
         (async () => {
             try {
                 setIsLoading(true);
-                const { user, coach } = await getCoach();
+                const { user, barangay } = await getBarangay();
                 setUser(user);
-                setCoach(coach);
+                setBarangay(barangay);
             } catch (error) {
                 setError(AppToolkit.getErrorMessage(error));
             } finally {
@@ -25,5 +25,5 @@ export default function useCoach() {
         })();
     }, []);
 
-    return { user, coach, isLoading, error };
+    return { user, barangay, isLoading, error };
 }

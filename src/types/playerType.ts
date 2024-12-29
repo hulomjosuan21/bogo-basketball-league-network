@@ -23,6 +23,8 @@ export interface PlayerLeagueMetaData {
 }
 
 export interface Player {
+    readonly id: string;
+    readonly userId: string;
     nickname: string;
     playerId: string;
     jerseyNumber: number;
@@ -36,4 +38,7 @@ export interface Player {
     teamMetaData: PlayerTeamMetaData[];
 
     gamesPlayed: number;
+
+    readonly createdAt: Date;
+    readonly updatedAt: Date;
 }

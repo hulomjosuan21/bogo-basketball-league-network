@@ -11,6 +11,10 @@ body {
   @apply w-4 h-4;
 }
 
+.icon-md {
+  @apply w-8 h-8;
+}
+
 .with-sidebar {
   @apply grid sm:grid-cols-[auto,1fr] grid-cols-1;
 }

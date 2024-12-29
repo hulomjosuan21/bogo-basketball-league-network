@@ -2,6 +2,7 @@
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import AppToolkit from "@/lib/app-toolkit";
+import UserDataType from "@/types/userDataType";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -70,16 +71,29 @@ export async function getUser(){
     )
 
     const {
+        error: userError,
         data: { user },
     } = await supabase.auth.getUser()
 
-    const { data: userData } = await supabase
+    if (!user) {
+        return { user, userData: null, errorMessage: AppToolkit.getErrorMessage(userError)};
+    }
+
+    const { error: userDataError, data } = await supabase
         .from("usersData")
         .select()
         .eq('userId', user?.id)
         .single();
 
-    return { user, userData, isSignedIn: !!user };
+    if (!data) {
+        return { user, userData: null, errorMessage: AppToolkit.getErrorMessage(userDataError)};
+    }
+
+    const userData: UserDataType = {
+        ...data
+    }
+
+    return { user, userData, isSignedIn: !!user, errorMessage: null };
 }
 
 export async function createClient() {

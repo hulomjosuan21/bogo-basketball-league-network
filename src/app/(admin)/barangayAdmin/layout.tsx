@@ -3,18 +3,18 @@ import {ReactNode} from "react";
 import {SidebarProvider, SidebarTrigger} from "@/components/ui/sidebar";
 import {BarangayAppSidebar} from "@/components/app-sidebar";
 import {ToggleTheme} from "@/components/toggle-theme";
-import {getBarangay} from "@/utils/supabase/server";
+import {getBarangay} from "@/actions/barangayActions";
 
 export default async function Layout({children}:{children: ReactNode}){
-    const { barangayData } = await getBarangay();
+    const { barangay } = await getBarangay();
 
-    if(!barangayData){
+    if(!barangay){
         return null
     }
 
     return (
         <SidebarProvider className={'with-sidebar'}>
-            <BarangayAppSidebar barangayName={barangayData.barangayName} barangayImage={barangayData.barangayImage}/>
+            <BarangayAppSidebar barangay={barangay}/>
             <main>
                 <div className={'sidebar-trigger'}>
                     <SidebarTrigger />

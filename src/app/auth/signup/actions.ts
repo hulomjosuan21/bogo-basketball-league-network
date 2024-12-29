@@ -33,7 +33,8 @@ export async function userSignupAction(formData: FormData){
             address,
             phoneNumber,
             dateOfBirth,
-            userId: user.id
+            userId: user.id,
+            email,
         }
 
         const { errorMessage: userDataError } = await insertNewUserDataAction(newUser)

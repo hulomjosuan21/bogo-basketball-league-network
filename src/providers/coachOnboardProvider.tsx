@@ -1,21 +1,21 @@
 'use client'
 import {ReactNode, useEffect, useTransition} from "react";
-import usePlayer from "@/hooks/use-player";
 import {useRouter} from "next/navigation";
 import Loading from "@/app/loading";
+import useCoach from "@/hooks/use-coach";
 
-export default function PlayerOnboardProvider({children}:{children: ReactNode}) {
-    const { player, isLoading } = usePlayer();
+export default function CoachOnboardProvider({children}:{children: ReactNode}) {
+    const { coach, isLoading } = useCoach();
     const router = useRouter();
     const [isPending, startTransition] = useTransition();
 
     useEffect(() => {
-        if (!isLoading && !player) {
+        if (!isLoading && !coach) {
             startTransition(() => {
-                router.push('/onboard/player');
+                router.push('/onboard/coach');
             });
         }
-    }, [player, isLoading, router, startTransition]);
+    }, [coach, isLoading, router, startTransition]);
 
     if (isLoading) {
         return <Loading />;
@@ -25,11 +25,11 @@ export default function PlayerOnboardProvider({children}:{children: ReactNode}) 
         return <Loading text={'Redirecting...'}/>;
     }
 
-    if (!player) {
+    if (!coach) {
         return null;
     }
 
-    console.log(`Player ${JSON.stringify(player, null, 2)}`)
+    console.log(`Player ${JSON.stringify(coach, null, 2)}`)
 
     return (
         <>

@@ -15,8 +15,9 @@ import {
     LogOut, ShieldAlert
 } from "lucide-react";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
-import favicon from "@/assets/favicon.png"
 import {signOutAction} from "@/actions/appActions";
+import Barangay from "@/types/barangayType";
+import AppToolkit from "@/lib/app-toolkit";
 
 const managementItems = [
     {
@@ -47,37 +48,38 @@ const managementItems = [
 ]
 
 type Props = {
-    barangayName?: string;
-    barangayImage?: string;
+    barangay: Barangay | null
 }
 
-export function BarangayAppSidebar({barangayName,barangayImage}:Props) {
+export function BarangayAppSidebar({barangay}:Props) {
 
     const handleSignOut = async () => {
         'use server'
-        await signOutAction()
+        await signOutAction('/auth/admin/login')
     }
 
     return (
         <Sidebar>
             <SidebarHeader>
                 <SidebarMenu>
-                    <SidebarMenuButton
-                        size="lg"
-                        className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-                    >
-                        <div className="flex items-center justify-center">
-                            <Avatar className={'aspect-square size-8 rounded-none'}>
-                                <AvatarImage src={barangayImage || favicon.src} />
-                                <AvatarFallback></AvatarFallback>
-                            </Avatar>
-                        </div>
-                        <div className="grid flex-1 text-left text-sm leading-tight">
+                    <Link href={'/'}>
+                        <SidebarMenuButton
+                            size="lg"
+                            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                        >
+                            <div className="flex items-center justify-center">
+                                <Avatar className={'aspect-square size-8 rounded-none'}>
+                                    <AvatarImage src={AppToolkit.ImageWithFallBack(barangay?.barangayImage).toString()} />
+                                    <AvatarFallback></AvatarFallback>
+                                </Avatar>
+                            </div>
+                            <div className="grid flex-1 text-left text-sm leading-tight">
                             <span className="truncate font-semibold">
-                              {barangayName || "Barangay Name"}
+                              {barangay?.barangayName || "Barangay Name"}
                             </span>
-                        </div>
-                    </SidebarMenuButton>
+                            </div>
+                        </SidebarMenuButton>
+                    </Link>
                 </SidebarMenu>
             </SidebarHeader>
             <SidebarContent>
