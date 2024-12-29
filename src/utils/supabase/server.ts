@@ -1,5 +1,7 @@
+'use server'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
+import AppToolkit from "@/lib/app-toolkit";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -103,3 +105,49 @@ export async function createClient() {
         }
     )
 }
+
+type UploadProps = {
+    file: File;
+    bucket: string;
+    folder?: string;
+};
+
+export async function getStorage() {
+    const { storage } = await createClient();
+    return storage;
+}
+
+export const uploadImage = async ({ file, bucket, folder }: UploadProps) => {
+    const fileName = file.name;
+    const fileExtension = fileName.slice(fileName.lastIndexOf(".") + 1);
+    const path = `${folder ? folder + "/" : ""}${AppToolkit.generateUid()}.${fileExtension}`;
+
+    const storage = await getStorage();
+
+    const { data, error } = await storage.from(bucket).upload(path, file);
+
+    if (error) {
+        return { imageUrl: null, errorMessage: "Image upload failed" };
+    }
+
+    const imageUrl = `${process.env
+        .NEXT_PUBLIC_SUPABASE_URL!}/storage/v1/object/public/${bucket}/${
+        data?.path
+    }`;
+
+    return { imageUrl, errorMessage: null };
+};
+
+export const deleteImage = async (imageUrl: string) => {
+    const bucketAndPathString = imageUrl.split("/storage/v1/object/public/")[1];
+    const firstSlashIndex = bucketAndPathString.indexOf("/");
+
+    const bucket = bucketAndPathString.slice(0, firstSlashIndex);
+    const path = bucketAndPathString.slice(firstSlashIndex + 1);
+
+    const storage = await getStorage();
+
+    const { data, error } = await storage.from(bucket).remove([path]);
+
+    return { data, error };
+};
