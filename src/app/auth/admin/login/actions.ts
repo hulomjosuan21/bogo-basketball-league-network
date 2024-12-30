@@ -1,7 +1,8 @@
 'use server'
-import {createClient, getBarangay} from "@/utils/supabase/server";
+import {createClient} from "@/utils/supabase/server";
 import {redirect} from "next/navigation";
 import RoleTypes from "@/types/roleTypes";
+import {getBarangay} from "@/actions/barangayActions";
 
 export async function loginBarangayAccountAction(formData: FormData){
     const supabase = await createClient()
@@ -10,15 +11,15 @@ export async function loginBarangayAccountAction(formData: FormData){
 
     const { error } = await supabase.auth.signInWithPassword({email, password})
 
-    const { barangayData } = await getBarangay();
+    const { barangay } = await getBarangay();
 
     if (error) {
         return { errorMessage: error}
     }
 
-    if(barangayData){
+    if(barangay){
         redirect(`/${RoleTypes.BarangayAdmin}`)
     }
 
-    return { errorMassage: null}
+    return { errorMassage: null }
 }

@@ -1,5 +1,5 @@
 import {ReactNode} from "react";
-import {ChartBarBig, Home, UserRound} from "lucide-react";
+import {ChartBarBig, Home, UserRound, UsersRound} from "lucide-react";
 import AppDock from "@/components/app-dock";
 import CoachOnboardProvider from "@/providers/coachOnboardProvider";
 
@@ -12,12 +12,17 @@ const initialDockItems = [
     {
         Icon: ChartBarBig,
         text: 'Leaderboard',
-        url: '/coach/leaderboard'
+        url: '/coach/page/leaderboard'
+    },
+    {
+        Icon: UsersRound,
+        text: 'Team',
+        url: '/coach/page/team'
     },
     {
         Icon: UserRound,
         text: 'Profile',
-        url: '/coach/profile'
+        url: '/coach/page/profile'
     }
 ]
 

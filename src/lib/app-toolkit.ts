@@ -21,7 +21,11 @@ export default class AppToolkit {
     }
 
     static ImageWithFallBack = (image: string | undefined | null | StaticImageData) => {
-        return image || fallBackImage.src
+        return image === 'no image' ? 'no image' : (image || fallBackImage.src);
+    }
+
+    static TextWithFallBack = (text: string | number | null | undefined) => {
+        return text || 'Text here';
     }
 
     static dateFormatter(date: Date | string, includeTime: boolean = true, format: string = 'mm-dd-yy hh:mm'): string {

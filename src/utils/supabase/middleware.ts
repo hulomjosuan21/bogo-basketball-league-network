@@ -65,7 +65,7 @@ export async function updateSession(request: NextRequest) {
     const role = barangayData?.role || userData?.role || undefined;
     console.log(`Role in middleware ${role?.toString()}`)
 
-    if (!role && pathname !== '/' && !pathname.startsWith('/auth')) {
+    if (!role && pathname !== '/' && !pathname.startsWith('/auth') && !pathname.startsWith('/view')) {
         const url = request.nextUrl.clone();
         url.pathname = '/';
         return NextResponse.redirect(url);
@@ -83,7 +83,7 @@ export async function updateSession(request: NextRequest) {
 
     // !pathname.startsWith(`/${RoleTypes.BarangayAdmin}`)
 
-    if (!isAllowed && pathname !== '/' && !pathname.startsWith('/auth')) {
+    if (!isAllowed && pathname !== '/' && !pathname.startsWith('/auth') && !pathname.startsWith('/view')) {
         const url = request.nextUrl.clone();
         url.pathname = '/';
         return NextResponse.redirect(url);

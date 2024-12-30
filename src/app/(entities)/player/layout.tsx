@@ -12,12 +12,12 @@ const initialDockItems = [
     {
         Icon: ChartBarBig,
         text: 'Leaderboard',
-        url: '/player/leaderboard'
+        url: '/player/page/leaderboard'
     },
     {
         Icon: UserRound,
         text: 'Profile',
-        url: '/player/profile'
+        url: '/player/page/profile'
     }
 ]
 

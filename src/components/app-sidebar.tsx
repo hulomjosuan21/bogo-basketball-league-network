@@ -1,3 +1,4 @@
+'use client'
 import {
     Sidebar,
     SidebarContent, SidebarFooter,
@@ -54,7 +55,6 @@ type Props = {
 export function BarangayAppSidebar({barangay}:Props) {
 
     const handleSignOut = async () => {
-        'use server'
         await signOutAction('/auth/admin/login')
     }
 
@@ -84,13 +84,13 @@ export function BarangayAppSidebar({barangay}:Props) {
             </SidebarHeader>
             <SidebarContent>
                 <SidebarGroup>
-                    <SidebarMenuButton asChild>
+                    <SidebarMenuButton asChild id={'dashboard'}>
                         <Link href={'/barangayAdmin'}>
                             <LayoutDashboard/>
                             <span>Dashboard</span>
                         </Link>
                     </SidebarMenuButton>
-                    <SidebarMenuButton asChild>
+                    <SidebarMenuButton asChild id={'administration'}>
                         <Link href={'/barangayAdmin/page/administration'}>
                             <ShieldAlert/>
                             <span>Administration</span>
@@ -98,7 +98,7 @@ export function BarangayAppSidebar({barangay}:Props) {
                     </SidebarMenuButton>
                 </SidebarGroup>
 
-                <SidebarGroup>
+                <SidebarGroup id={'manage'}>
                     <SidebarGroupLabel>Manage</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>

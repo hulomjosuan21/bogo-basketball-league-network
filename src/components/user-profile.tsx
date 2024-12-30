@@ -6,10 +6,11 @@ import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Input} from "@/components/ui/input";
 
 type Props = {
-    userData: UserDataType
+    userData: UserDataType,
+    gender?: string
 }
 
-export default function UserProfile({userData}:Props){
+export default function UserProfile({userData,gender}:Props){
     return (
         <main>
             <div className={'flex justify-center items-center flex-col gap-4'}>
@@ -38,6 +39,15 @@ export default function UserProfile({userData}:Props){
                                 <span className={'text-sm text-secondary-foreground'}>Last name</span>
                                 <Input value={userData.lastName as string} disabled={true}/>
                             </div>
+
+                            {
+                                gender && (
+                                    <div className={'grid grid-cols-2'}>
+                                        <span className={'text-sm text-secondary-foreground'}>Gender</span>
+                                        <Input value={gender} disabled={true}/>
+                                    </div>
+                                )
+                            }
 
                             <div className={'grid grid-cols-2'}>
                                 <span className={'text-sm text-secondary-foreground'}>Address</span>

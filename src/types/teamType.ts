@@ -19,19 +19,19 @@ export enum TEAM_SUB_STATUS {
 }
 
 export default interface Team {
-    readonly _id: string;
-    readonly createdAt: Date;
-    readonly updatedAt: Date;
+    readonly id: string;
+    readonly createdAt: string;
+    readonly updatedAt: string;
 
     coachId: string;
     teamId: string;
-    league: { leagueId: string; allowed: boolean };
+    league: unknown;
     teamName: string;
-    assistantCoach?: string;
-    teamImageUrl: string | null;
-    status: string[];
-    subStatus: string[];
-    playerIds: string[],
+    teamMetaData: unknown;
+    teamImage: string | null;
+    status: unknown;
+    subStatus: unknown;
+    playerIds: string[];
 
     gamesWon: number;
     gamesLost: number;

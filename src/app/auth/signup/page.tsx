@@ -29,11 +29,10 @@ export default function Page(){
     const handleFormAction = async (formData: FormData) => {
         startTransition(async () => {
             const {errorMessage} = await userSignupAction(formData);
-            if(!errorMessage){
-                alert('Account created successfully')
-                showToast("Account", "Created successfully", "default");
-            }else {
+            if(errorMessage){
                 showToast("Account error", errorMessage as string, "destructive");
+            }else {
+                showToast("Account", "Created successfully", "default");
             }
         });
     }

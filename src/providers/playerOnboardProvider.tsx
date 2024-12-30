@@ -22,14 +22,12 @@ export default function PlayerOnboardProvider({children}:{children: ReactNode}) 
     }
 
     if (isPending) {
-        return <Loading text={'Redirecting...'}/>;
+        return <Loading text={'Getting you onboard!...'}/>;
     }
 
     if (!player) {
         return null;
     }
-
-    console.log(`Player ${JSON.stringify(player, null, 2)}`)
 
     return (
         <>

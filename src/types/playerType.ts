@@ -23,22 +23,19 @@ export interface PlayerLeagueMetaData {
 }
 
 export interface Player {
-    readonly id: string;
-    readonly userId: string;
+    id: string;
+    userId: string;
+    fullName: string;
+    leagueMetadata: unknown;
+    teamMetaData: unknown;
     nickname: string;
-    playerId: string;
+    readonly gender: string;
     jerseyNumber: number;
-    playerHeight: number;
-    playerWeight: number;
+    playerHeight: string | null;
+    playerWeight: string | null;
     primaryPosition: string;
-    secondaryPosition: string;
-
-    leagueMetadata: PlayerLeagueMetaData[];
-
-    teamMetaData: PlayerTeamMetaData[];
-
+    secondaryPosition: string | null;
     gamesPlayed: number;
-
-    readonly createdAt: Date;
-    readonly updatedAt: Date;
+    createdAt: string;
+    updatedAt: string
 }

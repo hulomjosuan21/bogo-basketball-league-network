@@ -1,6 +1,8 @@
 'use server'
 import {createClient, getUser} from "@/utils/supabase/server";
 import Coach from "@/types/coachType";
+import {InsertCoachType} from "@/db/schemas/coachDataTable";
+import AppToolkit from "@/lib/app-toolkit";
 
 export const getCoach = async () => {
     const [{ user }, supabase] = await Promise.all([getUser(), createClient()]);
@@ -15,9 +17,36 @@ export const getCoach = async () => {
         return { user, coach: null};
     }
 
-    const coach: Coach = {
-        ...coachData,
-    };
+    const coach: Coach = coachData;
 
     return { user, coach };
 };
+
+export async function insertNewCoachDataAction(){
+    const { userData } = await getUser();
+
+    if(!userData){
+        return { errorMessage: 'No user data!' }
+    }
+
+    const supabase = await createClient();
+
+    const newCoach: InsertCoachType = {
+        userId: userData.userId,
+        coachId: AppToolkit.generateUid(userData.firstName),
+        teamId: AppToolkit.generateUid(userData.lastName),
+        fullName: `${userData.firstName} ${userData.lastName}`,
+    }
+
+    console.log(`Coach onboarding...`)
+
+    const { error } = await supabase
+        .from('coachesTable')
+        .insert(newCoach);
+
+    if(error){
+        return { errorMessage: AppToolkit.getErrorMessage(error) }
+    }
+
+    return {errorMessage: null}
+}

@@ -3,8 +3,10 @@ import {createClient} from "@/utils/supabase/server";
 import {InsertUserDataType} from "@/db/schemas/userDataTable";
 import {insertNewUserDataAction} from "@/actions/userActions";
 import RoleTypes from "@/types/roleTypes";
+import AppToolkit from "@/lib/app-toolkit";
+import {redirect} from "next/navigation";
 
-export async function userSignupAction(formData: FormData){
+export async function userSignupAction(formData: FormData) {
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
     const userRole = formData.get('role') as RoleTypes.Player | RoleTypes.Coach;
@@ -21,8 +23,12 @@ export async function userSignupAction(formData: FormData){
         password
     })
 
+    if(!user){
+        return { errorMessage: 'Failed to signup user'}
+    }
+
     if (signupError) {
-        return { errorMessage: signupError}
+        return { errorMessage: AppToolkit.getErrorMessage(signupError) }
     }
 
     if(user){
@@ -36,13 +42,13 @@ export async function userSignupAction(formData: FormData){
             userId: user.id,
             email,
         }
-
         const { errorMessage: userDataError } = await insertNewUserDataAction(newUser)
 
         if(userDataError){
             return { errorMessage: userDataError}
+        }else{
+            redirect(`/${userRole}`)
         }
     }
-
     return { errorMessage: null}
 }

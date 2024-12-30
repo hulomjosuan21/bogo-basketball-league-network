@@ -5,6 +5,6 @@ export default interface Coach {
     coachId: string;
     teamId: string;
 
-    readonly createdAt: Date;
-    readonly updatedAt: Date;
+    readonly createdAt: string;
+    readonly updatedAt: string;
 }
