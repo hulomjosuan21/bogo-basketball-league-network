@@ -8,6 +8,7 @@ export const genderEnum = pgEnum('gender_enum', [Male, Female, Other]);
 export const playersTable = pgTable("playersTable", {
     id: uuid("id").defaultRandom().primaryKey(),
     userId: text("userId").notNull().unique(),
+    playerId: text("playerId").notNull().unique(),
     fullName: text("fullName").notNull(),
     leagueMetadata: jsonb('leagueMetadata'),
     teamMetaData: jsonb('teamMetaData'),

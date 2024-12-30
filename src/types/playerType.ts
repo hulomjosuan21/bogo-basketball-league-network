@@ -23,8 +23,9 @@ export interface PlayerLeagueMetaData {
 }
 
 export interface Player {
-    id: string;
-    userId: string;
+    readonly id: string;
+    readonly userId: string;
+    readonly playerId: string;
     fullName: string;
     leagueMetadata: unknown;
     teamMetaData: unknown;

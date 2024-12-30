@@ -13,7 +13,7 @@ import {
     PersonStanding,
     Workflow,
     CalendarCheck2,
-    LogOut, ShieldAlert
+    LogOut, ShieldAlert,Joystick
 } from "lucide-react";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {signOutAction} from "@/actions/appActions";
@@ -45,6 +45,11 @@ const managementItems = [
         title: "Schedule Game",
         url: "/barangayAdmin/page/schedule",
         icon: CalendarCheck2
+    },
+    {
+        title: "Game",
+        url: "/barangayAdmin/page/game",
+        icon: Joystick
     }
 ]
 

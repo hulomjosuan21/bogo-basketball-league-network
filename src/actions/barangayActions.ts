@@ -16,6 +16,28 @@ export const getAllBarangay = async () => {
     return { user, barangays };
 };
 
+export const getBarangayByNameAction = async (barangayName: string) => {
+    if (!barangayName) {
+        const barangays: Barangay[] = []
+        return { barangays };
+    }
+
+    const [supabase] = await Promise.all([createClient()]);
+
+    const { data: barangayData } = await supabase
+        .from('adminData')
+        .select()
+        .ilike('barangayName', `%${barangayName}%`)
+
+    if (!barangayData) {
+        return { barangays: [] as Barangay[] };
+    }
+
+    const barangays: Barangay[] = barangayData;
+
+    return { barangays: barangays };
+};
+
 export const getBarangay = async () => {
     const [{ user }, supabase] = await Promise.all([getUser(), createClient()]);
 

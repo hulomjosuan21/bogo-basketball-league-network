@@ -22,6 +22,28 @@ export const getCoach = async () => {
     return { user, coach };
 };
 
+export const getCoachByFullNameAction = async (fullName: string) => {
+    if (!fullName) {
+        const coaches: Coach[] = []
+        return { coaches };
+    }
+
+    const [supabase] = await Promise.all([createClient()]);
+
+    const { data: coachData } = await supabase
+        .from('coachesTable')
+        .select()
+        .ilike('fullName', `%${fullName}%`)
+
+    if (!coachData) {
+        return { coaches: [] as Coach[] };
+    }
+
+    const coaches: Coach[] = coachData;
+
+    return { coaches };
+};
+
 export async function insertNewCoachDataAction(){
     const { userData } = await getUser();
 

@@ -32,6 +32,13 @@ export default function Layout({children}:{children: ReactNode}){
                     title: 'Test',
                     description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim, rem!',
                 },
+            },
+            {
+                element: '#game',
+                popover: {
+                    title: 'Test',
+                    description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim, rem!',
+                },
             }
         ];
         start(steps)

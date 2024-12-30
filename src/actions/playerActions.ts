@@ -29,6 +29,29 @@ export const getPlayer = async () => {
     return { user, player };
 };
 
+export const getPlayerByFullNameAction = async (fullName: string) => {
+    if (!fullName) {
+        const players: Player[] = []
+        return { players };
+    }
+
+    const [supabase] = await Promise.all([createClient()]);
+
+    const { data: playerData } = await supabase
+        .from('playersTable')
+        .select()
+        .ilike('fullName', `%${fullName}%`)
+
+    if (!playerData) {
+        const players: Player[] = []
+        return { players };
+    }
+
+    const players: Player[] = playerData;
+
+    return { players };
+};
+
 export async function getAllPlayerData() {
     try {
         const players: Player[] = await db
@@ -108,7 +131,8 @@ export async function insertPlayerData(formData: FormData) {
         leagueMetadata: [],
         teamMetaData: [],
         gamesPlayed: 0,
-        gender
+        gender,
+        playerId: AppToolkit.generateUid(nickname)
     };
 
     try{
