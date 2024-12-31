@@ -18,8 +18,11 @@ import {
 import {getActiveLeagueAction} from "@/actions/leagueActions";
 import {getBarangay} from "@/actions/barangayActions";
 import {getTeamsByLeagueIdAndIsAllowed} from "@/actions/teamActions";
-import {Separator} from "@/components/ui/separator";
 import {ScrollArea} from "@/components/ui/scroll-area";
+import GenerateBracketTeamAutomatically, {
+    IncludeTeamActionComponent, SetBracketActionComponent,
+} from "@/app/(admin)/barangayAdmin/page/team/barangayTeamAction";
+import Team from "@/types/teamType";
 
 
 export default async function Page(){
@@ -31,59 +34,95 @@ export default async function Page(){
 
     const { activeLeague } = await getActiveLeagueAction(barangay);
 
+    if(!activeLeague){
+        return (
+            <div className={'h-[calc(100vh-80px)] grid place-items-center'}>No active League</div>
+        )
+    }
+
     const [ { teams: pendingTeams }, { teams: includedTeams } ] = await Promise.all([
         getTeamsByLeagueIdAndIsAllowed(activeLeague?.leagueId as string,false),
         getTeamsByLeagueIdAndIsAllowed(activeLeague?.leagueId as string,true)
     ])
 
+    const getSpecificTeamLeagueObject = (team: Team) => {
+        return team.leagueIds.find(league => league.leagueId === activeLeague.leagueId);
+    };
+
     const table = (
         <Table className={'border-y'}>
-            <TableCaption>Teams Table</TableCaption>
+            <TableCaption>{includedTeams.length > 0 ? 'List of included teams' : 'No team included'}</TableCaption>
             <TableHeader className={'bg-secondary'}>
                 <TableRow>
                     <TableHead>Team name</TableHead>
+                    <TableHead>Bracket</TableHead>
+                    <TableHead className={'text-end'}>Set bracket manually</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
-                <TableRow>
-                    <TableCell className="font-medium">Test Team</TableCell>
-                </TableRow>
+                {
+                    includedTeams && includedTeams.map((team,index) => (
+                        <TableRow key={index}>
+                            <TableCell className="font-medium">{team.teamName}</TableCell>
+                            <TableCell>{getSpecificTeamLeagueObject(team)?.bracket?.toUpperCase() || 'Not set'}</TableCell>
+                            <TableCell>
+                                <SetBracketActionComponent team={team} league={activeLeague}/>
+                            </TableCell>
+                        </TableRow>
+                    ))
+                }
             </TableBody>
         </Table>
     )
 
-    const items = Array.from({length: 100})
+    function hasLeague() {
+        if(activeLeague){
+            return (
+                <ScrollArea className="h-[500px] rounded-md border">
+                    <div className="p-4">
+                        <h4 className="mb-4 text-sm font-medium leading-none">Pending teams</h4>
+                        {pendingTeams.map((team,index) => (
+                            <div key={index} className={'mb-4 py-1 border-b flex items-center justify-between gap-4'}>
+                                <div>
+                                    <span>{team.teamName}</span>
+                                </div>
+
+                                <div>
+                                    <IncludeTeamActionComponent team={team} league={activeLeague}/>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </ScrollArea>
+            )
+        }else{
+            return (
+                <div>
+                    <p className={'text-center'}>No active league found</p>
+                </div>
+            )
+        }
+    }
 
     return (
         <main>
 
-            <div className={'p-2'}>
+            <div className={'p-2 flex items-center justify-between'}>
                 <Sheet>
-                    <SheetTrigger asChild={true}>
+                    <SheetTrigger asChild={true} disabled={!activeLeague}>
                         <Button variant={'outline'}>Request</Button>
                     </SheetTrigger>
                     <SheetContent>
                         <SheetHeader>
                             <SheetTitle/>
                         </SheetHeader>
-
-
                         <div className={'mt-8'}>
-                            <ScrollArea className="h-[500px] rounded-md border">
-                                <div className="p-4">
-                                    <h4 className="mb-4 text-sm font-medium leading-none">Pending teams</h4>
-                                    {items.map((_,index) => (
-                                        <div key={index} className={'mb-4 border-b'}>
-                                            <div className="text-sm">
-                                                {index}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </ScrollArea>
+                            {hasLeague()}
                         </div>
                     </SheetContent>
                 </Sheet>
+
+                <GenerateBracketTeamAutomatically teams={includedTeams} currentLeague={activeLeague}/>
             </div>
 
             {table}

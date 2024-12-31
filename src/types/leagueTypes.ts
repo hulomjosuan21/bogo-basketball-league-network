@@ -5,6 +5,12 @@ export enum LEAGUE_STATUS {
     CANCELED = "Canceled"
 }
 
+export enum BracketType {
+    HIGHER = "higher bracket",
+    LOWER = "lower bracket",
+    CROSSED = "crossed bracket"
+}
+
 export default interface League {
     readonly id: string,
     readonly createdAt: string;

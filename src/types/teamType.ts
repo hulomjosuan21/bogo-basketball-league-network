@@ -1,3 +1,4 @@
+import {BracketType} from "@/types/leagueTypes";
 
 export enum TEAM_STATUS {
     Active = 'Active',
@@ -29,11 +30,12 @@ export default interface Team {
     leagueIds: {
         leagueId: string;
         isAllowed: boolean;
+        bracket: null | BracketType
     }[];
     teamName: string;
     teamMetaData: unknown;
     teamImage: string | null;
-    status: TEAM_SUB_STATUS[];
+    status: TEAM_STATUS[];
     subStatus: TEAM_SUB_STATUS[];
     playerIds: string[];
 

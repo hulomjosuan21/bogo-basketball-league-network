@@ -45,7 +45,7 @@ export default function Layout({children}:{children: ReactNode}){
     }
     return (
         <SidebarProvider className={'with-sidebar'}>
-            <BarangayAppSidebar barangay={null}/>
+            <BarangayAppSidebar/>
             <main>
                 <div className={'sidebar-trigger'}>
                     <SidebarTrigger />

@@ -19,7 +19,7 @@ export default function Page(){
     }
 
     if(isPending){
-        return <Loading text={'Signing you out...'}/>
+        return <Loading text={'Signing you out...'} height={'h-[calc(100vh-100px)]'}/>
     }
 
     if(isLoading){
@@ -31,7 +31,7 @@ export default function Page(){
     }
 
     if(coachLoading){
-        return <Loading text={'Getting coach data...'}/>
+        return <Loading text={'Getting coach data...'} height={'h-[calc(100vh-100px)]'}/>
     }
 
     if(!coach){
@@ -50,7 +50,7 @@ export default function Page(){
         <main>
             <UserProfile userData={userData}/>
 
-            <div className={'flex justify-center items-center flex-col gap-4 mt-4'}>
+            <div className={'flex justify-center items-center flex-col gap-4 mt-4 mb-12'}>
                 <Button onClick={handleSignOut}>Sign out</Button>
             </div>
         </main>

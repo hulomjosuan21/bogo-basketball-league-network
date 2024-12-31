@@ -8,7 +8,7 @@ import League from "@/types/leagueTypes";
 import Loading from "@/app/loading";
 
 export default function Page(){
-    const { barangay, error ,isLoading: gettingBarangaLoading } = useBarangay();
+    const { barangay, error ,isLoading: gettingBarangayLoading } = useBarangay();
     const [_activeLeague, set_activeLeague] = useState<League | null>(null)
     const [isLoading, setIsLoading] = useState(false)
 
@@ -23,7 +23,7 @@ export default function Page(){
         })()
     }, [barangay])
 
-    if(gettingBarangaLoading){
+    if(gettingBarangayLoading){
         return <Loading text={'Getting barangay ready...'} height={'h-[calc(100vh-45px)]'}/>
     }
 

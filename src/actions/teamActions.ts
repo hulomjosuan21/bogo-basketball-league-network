@@ -8,6 +8,7 @@ import AppToolkit from "@/lib/app-toolkit";
 import Team, {TEAM_STATUS} from "@/types/teamType";
 import {revalidatePath} from "next/cache";
 import {createClient} from "@/utils/supabase/server";
+import {BracketType} from "@/types/leagueTypes";
 
 export async function getAllTeamAction(byCoach = false) {
     try {
@@ -74,17 +75,41 @@ export async function insertNewTeamDataAction(formData: FormData){
     }
 }
 
+//para set og bracket type
+export async function setBracketForLeagueAction(team: Team, leagueId: string, bracket: BracketType) {
+    try {
+        if (!Array.isArray(team.leagueIds)) {
+            return { errorMessage: `Team does not have any leagues.` };
+        }
+
+        const leagueIndex = team.leagueIds.findIndex(league => league.leagueId === leagueId);
+
+        if (leagueIndex === -1) {
+            return { errorMessage: `League not found in the team.` };
+        }
+
+        team.leagueIds[leagueIndex].bracket = bracket;
+
+        await db.update(teamsTable).set({ leagueIds: team.leagueIds }).where(eq(teamsTable.teamId, team.teamId));
+        revalidatePath('/barangayAdmin/page/team');
+        return { errorMessage: null };
+    } catch (error) {
+        return { errorMessage: `Failed to set bracket for league: ${AppToolkit.getErrorMessage(error)}` };
+    }
+}
+
 export async function addLeagueIdAction(team: Team, leagueId: string) {
     try {
         const leagueMetadata = {
             leagueId,
-            isAllowed: false
+            isAllowed: false,
+            bracket: null
         };
 
         if (!Array.isArray(team.leagueIds)) {
             team.leagueIds = [];
         } else {
-            team.leagueIds = team.leagueIds as { leagueId: string, isAllowed: boolean }[];
+            team.leagueIds = team.leagueIds as { leagueId: string, isAllowed: boolean,bracket: BracketType | null }[];
         }
 
         if (team.leagueIds.some(league => league.leagueId === leagueId)) {
@@ -102,17 +127,21 @@ export async function addLeagueIdAction(team: Team, leagueId: string) {
 
 export async function getTeamsByLeagueIdAndIsAllowed(leagueId: string | null, isAllowed: boolean) {
     let isLoading = true;
+    console.log(`League id ${leagueId}`)
 
     if(!leagueId){
         isLoading = false
         return { teams: [] as Team[], isLoading };
     }
+
     const supabase = await createClient();
 
     const { data } = await supabase
         .from('teamsTable')
         .select()
-        .contains('leagueIds', [{ leagueId, isAllowed }]);
+        .filter('leagueIds', 'cs', JSON.stringify([
+            { leagueId,isAllowed }
+        ]));
 
     if (!data) {
         isLoading = false
@@ -120,9 +149,30 @@ export async function getTeamsByLeagueIdAndIsAllowed(leagueId: string | null, is
     }
 
     const teams: Team[] = data;
-
     isLoading = false;
     return {teams, isLoading};
+}
+
+export async function removeLeagueIdAction(team: Team, leagueId: string) {
+    try {
+        if (!Array.isArray(team.leagueIds)) {
+            return { errorMessage: `Team does not have any leagues.` };
+        }
+
+        const leagueIndex = team.leagueIds.findIndex(league => league.leagueId === leagueId);
+
+        if (leagueIndex === -1) {
+            return { errorMessage: `League not found in the team.` };
+        }
+
+        team.leagueIds.splice(leagueIndex, 1);
+
+        await db.update(teamsTable).set({ leagueIds: team.leagueIds }).where(eq(teamsTable.teamId, team.teamId));
+        revalidatePath('/coach/team');
+        return { errorMessage: null };
+    } catch (error) {
+        return { errorMessage: `Failed to remove league from team: ${AppToolkit.getErrorMessage(error)}` };
+    }
 }
 
 export async function updateLeagueTeamIdAction(team: Team, leagueId: string, isAllowed: boolean) {

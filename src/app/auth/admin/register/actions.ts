@@ -3,6 +3,8 @@ import {createClient} from "@/utils/supabase/server";
 import {InsertAdminDataType} from "@/db/schemas/adminDataTable";
 import AppToolkit from "@/lib/app-toolkit";
 import {insertNewAdminDataAction} from "@/actions/adminActions";
+import {redirect} from "next/navigation";
+import RoleTypes from "@/types/roleTypes";
 
 export async function createBarangayAccountAction(formData: FormData){
     const email = formData.get('email') as string;
@@ -35,6 +37,8 @@ export async function createBarangayAccountAction(formData: FormData){
 
         if(adminDataError){
             return { errorMessage: adminDataError}
+        }else{
+            redirect(`/${RoleTypes.BarangayAdmin}`)
         }
     }
 
