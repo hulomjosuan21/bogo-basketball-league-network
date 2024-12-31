@@ -9,9 +9,6 @@ export class TeamBracketAssigner {
     constructor(teams: Team[], leagueId: string) {
         this.teams = teams;
         this.leagueId = leagueId;
-        if(teams.length < 4){
-            throw new Error('There should be at least 4 teams to assign brackets');
-        }
     }
 
     async assignBrackets() {
@@ -20,6 +17,7 @@ export class TeamBracketAssigner {
         const crossedBracketTeams: Team[] = [];
         const newEntryTeams: Team[] = [];
 
+        // Sort teams into categories based on status, subStatus, and performance
         for (const team of this.teams) {
             if (team.status.includes(TEAM_STATUS.NewEntry)) {
                 newEntryTeams.push(team);
@@ -34,6 +32,7 @@ export class TeamBracketAssigner {
             }
         }
 
+        // Distribute New Entry teams evenly between higher and lower brackets
         for (let i = 0; i < newEntryTeams.length; i++) {
             if (i % 2 === 0) {
                 higherBracketTeams.push(newEntryTeams[i]);
@@ -42,9 +41,29 @@ export class TeamBracketAssigner {
             }
         }
 
+        // Sort teams within brackets based on performance metrics
+        higherBracketTeams.sort((a, b) => this.compareTeamsByPerformance(a, b));
+        lowerBracketTeams.sort((a, b) => this.compareTeamsByPerformance(a, b));
+        crossedBracketTeams.sort((a, b) => this.compareTeamsByPerformance(a, b));
+
+        // Assign brackets
         await this.assignBracketToTeams(higherBracketTeams, BracketType.HIGHER);
         await this.assignBracketToTeams(lowerBracketTeams, BracketType.LOWER);
         await this.assignBracketToTeams(crossedBracketTeams, BracketType.CROSSED);
+    }
+
+    private compareTeamsByPerformance(teamA: Team, teamB: Team): number {
+        const winRateA = teamA.gamesPlayed > 0 ? teamA.gamesWon / teamA.gamesPlayed : 0;
+        const winRateB = teamB.gamesPlayed > 0 ? teamB.gamesWon / teamB.gamesPlayed : 0;
+
+        // Sort by win rate, then by games won, then by games played
+        if (winRateA !== winRateB) {
+            return winRateB - winRateA;
+        }
+        if (teamA.gamesWon !== teamB.gamesWon) {
+            return teamB.gamesWon - teamA.gamesWon;
+        }
+        return teamB.gamesPlayed - teamA.gamesPlayed;
     }
 
     private async assignBracketToTeams(teams: Team[], bracket: BracketType) {
