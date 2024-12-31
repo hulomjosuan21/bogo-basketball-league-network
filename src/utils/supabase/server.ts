@@ -12,6 +12,7 @@ if(!supabaseUrl && !supabaseAnonKey){
 }
 
 export async function getUser(){
+    let isLoading = true;
     const cookieStore = await cookies()
 
     const supabase = createServerClient(
@@ -40,6 +41,7 @@ export async function getUser(){
     } = await supabase.auth.getUser()
 
     if (!user) {
+        isLoading = false;
         return { user, userData: null, errorMessage: AppToolkit.getErrorMessage(userError)};
     }
 
@@ -50,6 +52,7 @@ export async function getUser(){
         .single();
 
     if (!data) {
+        isLoading = false;
         return { user, userData: null, errorMessage: AppToolkit.getErrorMessage(userDataError)};
     }
 
@@ -57,7 +60,8 @@ export async function getUser(){
         ...data
     }
 
-    return { user, userData, isSignedIn: !!user, errorMessage: null };
+    isLoading = false;
+    return { user, userData, isSignedIn: !!user, errorMessage: null, isLoading };
 }
 
 export async function createClient() {

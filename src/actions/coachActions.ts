@@ -1,8 +1,9 @@
 'use server'
 import {createClient, getUser} from "@/utils/supabase/server";
 import Coach from "@/types/coachType";
-import {InsertCoachType} from "@/db/schemas/coachDataTable";
+import {coachesTable, InsertCoachType} from "@/db/schemas/coachDataTable";
 import AppToolkit from "@/lib/app-toolkit";
+import {Player} from "@/types/playerType";
 
 export const getCoach = async () => {
     const [{ user }, supabase] = await Promise.all([getUser(), createClient()]);
@@ -21,6 +22,36 @@ export const getCoach = async () => {
 
     return { user, coach };
 };
+
+export async function getOneCoachByIdAction(id: keyof typeof coachesTable, _id: string){
+    let isLoading = true;
+    const supabase = await createClient();
+
+    const { data: coachData } = await supabase.from('coachesTable').select().eq(id, _id).single();
+
+    isLoading = false;
+
+    if(!coachData){
+        return { coach: null, isLoading };
+    }
+
+    const coach: Coach = coachData;
+
+    return { coach: coach, isLoading };
+}
+
+export async function getAllCoachDataAction(){
+    const supabase = await createClient();
+    const { data: coachesData } = await supabase.from('coachesTable').select()
+
+    if(!coachesData){
+        return { coaches: [] as Player[] }
+    }
+
+    const coaches: Coach[] = coachesData;
+
+    return { coaches }
+}
 
 export const getCoachByFullNameAction = async (fullName: string) => {
     if (!fullName) {
@@ -60,7 +91,6 @@ export async function insertNewCoachDataAction(){
         fullName: `${userData.firstName} ${userData.lastName}`,
     }
 
-    console.log(`Coach onboarding...`)
 
     const { error } = await supabase
         .from('coachesTable')

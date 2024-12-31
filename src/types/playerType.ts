@@ -27,8 +27,9 @@ export interface Player {
     readonly userId: string;
     readonly playerId: string;
     fullName: string;
-    leagueMetadata: unknown;
-    teamMetaData: unknown;
+    leagueMetadata: PlayerLeagueMetaData[];
+    teamMetaData: PlayerTeamMetaData[];
+    playerImage: string | null;
     nickname: string;
     readonly gender: string;
     jerseyNumber: number;

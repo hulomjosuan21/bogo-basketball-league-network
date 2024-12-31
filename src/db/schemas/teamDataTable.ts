@@ -7,7 +7,7 @@ export const teamsTable = pgTable('teamsTable', {
 
     coachId: text("coachId").notNull(),
     teamId: text("teamId").notNull().unique(),
-    league: jsonb('league'),
+    leagueIds: jsonb('leagueIds'),
     teamName: text('teamName').notNull(),
     teamMetaData: jsonb('teamMetaData'),
     teamImage: text('teamImage'),

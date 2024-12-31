@@ -2,9 +2,11 @@
 import {useEffect, useRef} from "react";
 import {Loader} from "@googlemaps/js-api-loader";
 import Barangay from "@/types/barangayType";
+import {useRouter} from "next/navigation";
 
 export function GoogleMapMarkArray({ barangays, className }: { barangays: Barangay[], className: string}) {
     const mapRef = useRef<HTMLDivElement>(null);
+    const router = useRouter()
 
     useEffect(() => {
         (async () => {
@@ -42,6 +44,7 @@ export function GoogleMapMarkArray({ barangays, className }: { barangays: Barang
                         });
 
                         marker.addListener('click', () => {
+                            router.push(`/view/barangay/${barangay.barangayId}`);
                         });
                     }
                 });

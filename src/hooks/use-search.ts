@@ -10,13 +10,18 @@ import Barangay from "@/types/barangayType";
 export default function useSearch(){
     const [entity, setEntity] = useState<string>(RoleTypes.Player)
     const [name,setName] = useState<string>('')
+    const [isLoading, setIsLoading] = useState(false)
 
 
     const handleSearch = async () => {
+        if(!name){
+            return { entity, players: [], coaches: [], barangays: [], empty: true }
+        }
         let players: Player[] = [];
         let coaches: Coach[] = [];
         let barangays: Barangay[] = [];
 
+        setIsLoading(true)
         if(entity === RoleTypes.Player){
             const { players: foundPlayers } = await getPlayerByFullNameAction(name)
             players = foundPlayers
@@ -28,8 +33,9 @@ export default function useSearch(){
             barangays = foundBarangays
         }
 
-        return { entity, players, coaches, barangays }
+        setIsLoading(false)
+        return { entity, players, coaches, barangays, empty: false }
     }
 
-    return { handleSearch, setEntity, setName }
+    return { handleSearch, setEntity, setName, isLoading }
 }

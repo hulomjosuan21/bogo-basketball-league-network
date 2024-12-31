@@ -5,6 +5,7 @@ export const coachesTable = pgTable("coachesTable", {
     userId: text("userId").notNull().unique(),
     fullName: text("fullName").notNull(),
     coachId: text("coachId").notNull().unique(),
+    coachImage: text("coachImage"),
     teamId: text("teamId").notNull().unique(),
     createdAt: date("createdAt").defaultNow().notNull(),
     updatedAt: date("updatedAt").defaultNow().notNull(),

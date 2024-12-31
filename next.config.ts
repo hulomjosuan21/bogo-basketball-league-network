@@ -1,9 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-    images: {
-        domains: ['fhqrhedvhaesfwytqxut.supabase.co'],
-    },
+
 };
 
+module.exports = {
+    images: {
+        domains: ['encrypted-tbn0.gstatic.com','fhqrhedvhaesfwytqxut.supabase.co'],
+    },
+};
 export default nextConfig;

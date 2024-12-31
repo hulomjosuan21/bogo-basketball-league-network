@@ -20,6 +20,10 @@ export default class AppToolkit {
         return `${cleanedBase}-${uuid}`;
     }
 
+    static TextWithLimit(text: string, limit: number = 50,etc = '...'): string {
+        return text.length > limit ? text.slice(0, limit) + etc : text;
+    }
+
     static ImageWithFallBack = (image: string | undefined | null | StaticImageData) => {
         return image === 'no image' ? 'no image' : (image || fallBackImage.src);
     }

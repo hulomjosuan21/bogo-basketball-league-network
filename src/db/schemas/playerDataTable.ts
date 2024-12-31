@@ -11,6 +11,7 @@ export const playersTable = pgTable("playersTable", {
     playerId: text("playerId").notNull().unique(),
     fullName: text("fullName").notNull(),
     leagueMetadata: jsonb('leagueMetadata'),
+    playerImage: text('playerImage'),
     teamMetaData: jsonb('teamMetaData'),
     nickname: text("nickname").notNull(),
     gender: genderEnum("gender").notNull(),

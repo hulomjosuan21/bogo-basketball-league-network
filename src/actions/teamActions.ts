@@ -66,12 +66,84 @@ export async function insertNewTeamDataAction(formData: FormData){
     }
 
     try {
-        console.log(`New team created ${JSON.stringify(newTeam,null,2)}`);
         await db.insert(teamsTable).values(newTeam);
         revalidatePath('/coach/team');
         return { errorMessage: null }
     }catch (error){
         return { errorMessage: AppToolkit.getErrorMessage(error) }
+    }
+}
+
+export async function addLeagueIdAction(team: Team, leagueId: string) {
+    try {
+        const leagueMetadata = {
+            leagueId,
+            isAllowed: false
+        };
+
+        if (!Array.isArray(team.leagueIds)) {
+            team.leagueIds = [];
+        } else {
+            team.leagueIds = team.leagueIds as { leagueId: string, isAllowed: boolean }[];
+        }
+
+        if (team.leagueIds.some(league => league.leagueId === leagueId)) {
+            return { errorMessage: `Team is already in the league.` };
+        }
+
+        team.leagueIds.push(leagueMetadata);
+        await db.update(teamsTable).set({ leagueIds: team.leagueIds }).where(eq(teamsTable.teamId, team.teamId));
+        revalidatePath('/coach/team');
+        return { errorMessage: null };
+    } catch (error) {
+        return { errorMessage: `Failed to add league to team: ${AppToolkit.getErrorMessage(error)}` };
+    }
+}
+
+export async function getTeamsByLeagueIdAndIsAllowed(leagueId: string | null, isAllowed: boolean) {
+    let isLoading = true;
+
+    if(!leagueId){
+        isLoading = false
+        return { teams: [] as Team[], isLoading };
+    }
+    const supabase = await createClient();
+
+    const { data } = await supabase
+        .from('teamsTable')
+        .select()
+        .contains('leagueIds', [{ leagueId, isAllowed }]);
+
+    if (!data) {
+        isLoading = false
+        return { teams: [] as Team[],isLoading };
+    }
+
+    const teams: Team[] = data;
+
+    isLoading = false;
+    return {teams, isLoading};
+}
+
+export async function updateLeagueTeamIdAction(team: Team, leagueId: string, isAllowed: boolean) {
+    try {
+        if (!Array.isArray(team.leagueIds)) {
+            return { errorMessage: `Team does not have any leagues.` };
+        }
+
+        const leagueIndex = team.leagueIds.findIndex(league => league.leagueId === leagueId);
+
+        if (leagueIndex === -1) {
+            return { errorMessage: `League not found in the team.` };
+        }
+
+        team.leagueIds[leagueIndex].isAllowed = isAllowed;
+
+        await db.update(teamsTable).set({ leagueIds: team.leagueIds }).where(eq(teamsTable.teamId, team.teamId));
+        revalidatePath('/coach/team');
+        return { errorMessage: null };
+    } catch (error) {
+        return { errorMessage: `Failed to update league in team: ${AppToolkit.getErrorMessage(error)}` };
     }
 }
 

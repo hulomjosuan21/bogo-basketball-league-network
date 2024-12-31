@@ -4,7 +4,7 @@ export default interface Coach {
     fullName: string;
     coachId: string;
     teamId: string;
-
+    coachImage: string | null;
     readonly createdAt: string;
     readonly updatedAt: string;
 }

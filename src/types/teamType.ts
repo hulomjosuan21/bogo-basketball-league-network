@@ -1,3 +1,4 @@
+
 export enum TEAM_STATUS {
     Active = 'Active',
     Inactive = 'Inactive',
@@ -25,12 +26,15 @@ export default interface Team {
 
     coachId: string;
     teamId: string;
-    league: unknown;
+    leagueIds: {
+        leagueId: string;
+        isAllowed: boolean;
+    }[];
     teamName: string;
     teamMetaData: unknown;
     teamImage: string | null;
-    status: unknown;
-    subStatus: unknown;
+    status: TEAM_SUB_STATUS[];
+    subStatus: TEAM_SUB_STATUS[];
     playerIds: string[];
 
     gamesWon: number;

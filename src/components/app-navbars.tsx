@@ -7,30 +7,33 @@ import {Button} from "@/components/ui/button";
 
 export function NavbarOne(){
     return (
-        <header className={'fixed top-0 left-0 w-full items-center flex justify-between z-50 py-4 px-8 h-[58px] bg-background'}>
-            <div>
-                <Link
-                    href={'/'}
-                    aria-label={'landing page'}
-                >
-                    <div className="w-6">
-                        <AspectRatio ratio={1}>
-                            <Image src={favicon} alt="Image" className="object-cover"/>
-                        </AspectRatio>
-                    </div>
-                </Link>
-            </div>
+        <header className={'h-[58px] top-0 left-0 w-full flex fixed bg-background z-50 justify-center'}>
+            <div className={'w-[80%] sm:w-[60%] h-full flex items-center justify-between'}>
+                <div>
+                    <Link
+                        href={'/'}
+                        aria-label={'landing page'}
+                    >
+                        <div className="w-6">
+                            <AspectRatio ratio={1}>
+                                <Image src={favicon} alt="Image" className="object-cover"/>
+                            </AspectRatio>
+                        </div>
+                    </Link>
+                </div>
 
-            <div>
-                <ToggleTheme btnVariant={'ghost'}/>
+                <div>
+                    <ToggleTheme btnVariant={'ghost'}/>
+                </div>
             </div>
         </header>
     )
 }
 
-export function LandingPageNavbar(){
+export function LandingPageNavbar() {
     return (
-        <header className={'motion-preset-fade motion-duration-1000 h-[58px] top-0 left-0 w-full flex fixed bg-background z-50 justify-center'}>
+        <header
+            className={'motion-preset-fade motion-duration-1000 h-[58px] top-0 left-0 w-full flex fixed bg-background z-50 justify-center'}>
             <div className={'w-[80%] sm:w-[60%] h-full flex items-center justify-between'}>
                 <div>
                     <div className="size-8">

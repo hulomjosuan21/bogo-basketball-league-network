@@ -9,7 +9,7 @@ import {
     Sheet,
     SheetContent,
     SheetHeader,
-    SheetTitle, SheetTrigger,
+    SheetTitle,
 } from "@/components/ui/sheet"
 import {Input} from "@/components/ui/input";
 import {Player} from "@/types/playerType";
@@ -25,7 +25,6 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import useTeamPlayer from "@/hooks/use-teamPlayer";
-
 
 type Props = {
     team: Team,
@@ -149,7 +148,7 @@ export default function CoachTeamAction({team,coachTeam}:Props){
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
+                    <DropdownMenuSeparator/>
                     <DropdownMenuItem onClick={() => setSheetOpen1(true)}>Add Player</DropdownMenuItem>
                     <DropdownMenuItem onClick={handleUpdate}> {isUpdating ? 'Updating...' : 'Edit'}</DropdownMenuItem>
                     <DropdownMenuItem onClick={handleDelete}>{isDeleting ? 'Deleting...' : 'Delete'}</DropdownMenuItem>

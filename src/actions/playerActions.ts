@@ -52,16 +52,34 @@ export const getPlayerByFullNameAction = async (fullName: string) => {
     return { players };
 };
 
-export async function getAllPlayerData() {
-    try {
-        const players: Player[] = await db
-            .select()
-            .from(playersTable);
+export async function getOnePlayerByIdAction(id: keyof typeof playersTable, _id: string){
+    let isLoading = true;
+    const supabase = await createClient();
 
-        return { players }
-    }catch{
-        return { players: [] }
+    const { data: playerData } = await supabase.from('playersTable').select().eq(id, _id).single();
+
+    isLoading = false;
+
+    if(!playerData){
+        return { player: null, isLoading };
     }
+
+    const player: Player = playerData;
+
+    return { player: player, isLoading };
+}
+
+export async function getAllPlayerDataAction() {
+    const supabase = await createClient();
+    const { data: playersData } = await supabase.from('playersTable').select()
+
+    if(!playersData){
+        return { players: [] as Player[] }
+    }
+
+    const players: Player[] = playersData;
+
+    return { players }
 }
 
 export async function getPlayersDataByIds(playerIds: string[]) {

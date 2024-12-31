@@ -20,11 +20,11 @@ export default function Page(){
     }
 
     if(isPending){
-        return <Loading text={'Signing you out...'}/>
+        return <Loading text={'Signing you out...'} height={'h-[calc(100vh-90px)]'}/>
     }
 
     if(isLoading){
-        return <Loading/>
+        return <Loading height={'h-[calc(100vh-90px)]'}/>
     }
 
     if(error){
@@ -32,7 +32,7 @@ export default function Page(){
     }
 
     if(playerLoading){
-        return <Loading text={'Getting player data...'}/>
+        return <Loading text={'Getting player data...'} height={'h-[calc(100vh-90px)]'}/>
     }
 
     if(!player){

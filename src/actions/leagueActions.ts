@@ -57,6 +57,9 @@ export async function getAllLeagueActionByCoach(passed = false,ascending = true)
 }
 
 export async function getActiveLeagueAction(barangay: Barangay){
+    let isLoading = false;
+
+    isLoading = true;
     const supabase = await createClient();
 
     const { data: league, error: dbError } = await supabase
@@ -66,11 +69,13 @@ export async function getActiveLeagueAction(barangay: Barangay){
         .in('status', [LEAGUE_STATUS.SCHEDULED, LEAGUE_STATUS.ONGOING])
         .single();
 
+    isLoading = false;
+
     if(dbError){
         return { activeLeague:null, errorMessage: AppToolkit.getErrorMessage(dbError) }
     }
 
-    return { activeLeague: league as League, errorMessage: null }
+    return { activeLeague: league as League, errorMessage: null, isLoading }
 }
 
 export async function updateLeagueStatusAction(league: League, newStatus: LEAGUE_STATUS){
