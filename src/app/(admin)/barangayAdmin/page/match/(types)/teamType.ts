@@ -5,7 +5,8 @@ export interface ToMatchTeam {
     id: string;
     teamId: string,
     teamName: string,
-    bracket: BracketType
+    bracket: BracketType,
+    teamImage: string | null
 }
 
 export interface MatchUp {
@@ -34,6 +35,7 @@ export function findTeamsByLeagueId(
                 teamId: team.teamId,
                 teamName: team.teamName,
                 bracket: leagueInfo?.bracket as BracketType,
+                teamImage: team.teamImage
             };
         });
 }

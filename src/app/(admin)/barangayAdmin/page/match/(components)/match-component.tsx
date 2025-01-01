@@ -14,6 +14,7 @@ import {TeamsList} from "@/app/(admin)/barangayAdmin/page/match/(components)/tea
 import {DropArea} from "@/app/(admin)/barangayAdmin/page/match/(components)/drop-area";
 import {DraggingOverlay} from "@/app/(admin)/barangayAdmin/page/match/(components)/drag-overlay";
 import {Badge} from "@/components/ui/badge";
+import {updateMatchStatusAction} from "@/actions/matchActions";
 
 type Props = {
     teams: ToMatchTeam[],
@@ -114,6 +115,15 @@ export default function TournamentBracket({teams,league,matches}:Props) {
         setMatchUp({ homeTeam: null, awayTeam: null });
     };
 
+    const handleCancelMatch = async (matchId: string) => {
+        const { errorMessage } = await updateMatchStatusAction(matchId, MatchStatusType.CANCELLED)
+        if(errorMessage){
+            showToast('Error', errorMessage, 'destructive');
+        }else{
+            showToast('Success', 'Match has been cancelled', 'default');
+        }
+    }
+
     const activeDragTeam = activeId ? teams.find(team => team.id === activeId) : null
 
     const matchTable = () => {
@@ -131,7 +141,7 @@ export default function TournamentBracket({teams,league,matches}:Props) {
                    </TableHeader>
                    <TableBody>
                        {
-                           matches.map((match,index) => (
+                           matches.filter(m => m.status !== MatchStatusType.CANCELLED).map((match,index) => (
                                <TableRow key={index}>
                                    <TableCell className="font-medium">{match.matchedTeam[0].teamName} <span className={'text-orange-400'}>vs</span> {match.matchedTeam[1].teamName}</TableCell>
                                    <TableCell>
@@ -144,7 +154,7 @@ export default function TournamentBracket({teams,league,matches}:Props) {
                                    </TableCell>
                                    <TableCell>
                                        <div className={'flex items-center gap-2 justify-end'}>
-                                           <Button variant={'outline'} size={'sm'}>Cancel</Button>
+                                           <Button variant={'outline'} size={'sm'} onClick={() => handleCancelMatch(match.matchId)}>Cancel</Button>
                                            <Button size={'sm'}>Start</Button>
                                        </div>
                                    </TableCell>
@@ -242,7 +252,7 @@ export default function TournamentBracket({teams,league,matches}:Props) {
                         </div>
                     </div>
 
-                    <DraggingOverlay name={activeDragTeam?.teamName ?? null}/>
+                    <DraggingOverlay name={activeDragTeam?.teamName ?? null} teamImage={activeDragTeam?.teamImage ?? null}/>
                 </DndContext>
             </div>
 

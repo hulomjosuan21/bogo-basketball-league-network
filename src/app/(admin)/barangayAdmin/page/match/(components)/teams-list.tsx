@@ -20,6 +20,7 @@ export function TeamsList({ title, teams, activeId }: TeamsListProps) {
                             id={team.id}
                             name={team.teamName}
                             isDragging={activeId === team.id}
+                            teamImage={team.teamImage}
                         />
                     ))}
                 </div>

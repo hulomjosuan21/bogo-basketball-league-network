@@ -10,6 +10,22 @@ import {revalidatePath} from "next/cache";
 import {createClient} from "@/utils/supabase/server";
 import {BracketType} from "@/types/leagueTypes";
 
+export async function getAllTeamsNoCoachAction() {
+    const supabase = await createClient();
+
+    const { data } = await supabase
+        .from('teamsTable')
+        .select()
+
+    if(!data){
+        return { teams: [] as Team[] };
+    }
+
+    const teams: Team[] = data;
+
+    return { teams };
+}
+
 export async function getAllTeamAction(byCoach = false) {
     try {
         const supabase = await createClient();

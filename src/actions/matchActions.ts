@@ -2,7 +2,9 @@
 
 import {matchesTable} from "@/db/schemas/matchTable";
 import {createClient} from "@/utils/supabase/server";
-import {Match, MatchTeam} from "@/types/matchType";
+import {Match, MatchStatusType, MatchTeam} from "@/types/matchType";
+import AppToolkit from "@/lib/app-toolkit";
+import {revalidatePath} from "next/cache";
 
 export async function getAllMatchByIds(column: keyof typeof matchesTable, id: string) {
     const supabase = await createClient();
@@ -59,4 +61,21 @@ export async function getAllMatchByIds(column: keyof typeof matchesTable, id: st
     }));
 
     return { matches };
+}
+
+export async function updateMatchStatusAction(matchId: string, newStatus: MatchStatusType) {
+    const supabase = await createClient();
+
+    const { error } = await supabase
+        .from('matchesTable')
+        .update({ status: newStatus })
+        .eq('matchId', matchId);
+
+    if (error) {
+        return { errorMessage: AppToolkit.getErrorMessage(error) }
+    }else{
+        revalidatePath('/barangayAdmin/page/match')
+    }
+
+    return { errorMessage: null }
 }
