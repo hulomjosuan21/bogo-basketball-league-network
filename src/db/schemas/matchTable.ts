@@ -3,14 +3,14 @@ import {MatchStatusType} from "@/types/matchType";
 
 export const matchesTable = pgTable("matchesTable", {
     id: uuid("id").defaultRandom().primaryKey(),
-    matchId: uuid("matchId").defaultRandom(),
+    matchId: text("matchId").notNull(),
     date: timestamp("date").notNull(),
     durationMinutes: integer("duration_minutes").default(90),
     location: text("location"),
     leagueId: text("leagueId").notNull(),
     bracket: text("bracket").notNull(),
     notes: text("notes").default("No additional notes"),
-    status: text("status").default(MatchStatusType.ONGOING),
+    status: text("status").default(MatchStatusType.SCHEDULE),
     statistics: jsonb("statistics").default({}),
 });
 

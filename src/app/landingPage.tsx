@@ -53,6 +53,14 @@ export default function LandingPage({images,barangays}:Props){
 
     return (
         <section className={'mt-[58px] grid place-items-center'}>
+            {
+                hasEntity() && (
+                    <Button className={'motion-preset-compress fixed bottom-2 right-2 z-50'} variant={'secondary'}
+                            onClick={redirectToRole}>
+                        Back
+                    </Button>
+                )
+            }
             <div className={'flex flex-wrap items-center justify-center gap-4'}>
                 <div>
                     <article className={'h-[60vh] flex items-center relative'}>
@@ -60,14 +68,6 @@ export default function LandingPage({images,barangays}:Props){
                             <span
                                 className={'motion-preset-compress mx-4 font-semibold text-2xl sm:text-4xl break-words text-center'}>Bogo Basketball League Network</span>
                             <div className={'flex justify-center items-center gap-4'}>
-                                {
-                                    hasEntity() && (
-                                        <Button className={'motion-preset-compress '} variant={'secondary'}
-                                                onClick={redirectToRole}>
-                                            Back
-                                        </Button>
-                                    )
-                                }
                                 <Button className={'motion-preset-compress '} asChild={true}>
                                     <Link href={'/auth/signup'}>Get started</Link>
                                 </Button>

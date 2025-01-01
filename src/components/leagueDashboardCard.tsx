@@ -12,7 +12,7 @@ type Props = {
 
 export default function LeagueCard({ league }: Props) {
     return (
-        <Card className="w-full max-w-sm bg-secondary border-none shadow-none">
+        <Card className="w-full max-w-sm shadow-none">
             <CardHeader className="flex flex-row items-center gap-2">
                 <h2 className="text-lg font-semibold">{AppToolkit.TextWithFallBack(league?.leagueName)}</h2>
                 <Badge variant='outline'>

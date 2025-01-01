@@ -23,6 +23,7 @@ import GenerateBracketTeamAutomatically, {
     IncludeTeamActionComponent, SetBracketActionComponent,
 } from "@/app/(admin)/barangayAdmin/page/team/barangayTeamAction";
 import Team from "@/types/teamType";
+import Link from "next/link";
 
 
 export default async function Page(){
@@ -107,20 +108,30 @@ export default async function Page(){
     return (
         <main>
 
-            <div className={'p-2 flex items-center justify-between'}>
-                <Sheet>
-                    <SheetTrigger asChild={true} disabled={!activeLeague}>
-                        <Button variant={'outline'}>Request</Button>
-                    </SheetTrigger>
-                    <SheetContent>
-                        <SheetHeader>
-                            <SheetTitle/>
-                        </SheetHeader>
-                        <div className={'mt-8'}>
-                            {hasLeague()}
-                        </div>
-                    </SheetContent>
-                </Sheet>
+            <div className={'p-2 flex items-center justify-between gap-4'}>
+
+                <div className={'flex items-center gap-2'}>
+                    <Sheet>
+                        <SheetTrigger asChild={true} disabled={!activeLeague}>
+                            <Button variant={'outline'}>Request</Button>
+                        </SheetTrigger>
+                        <SheetContent>
+                            <SheetHeader>
+                                <SheetTitle/>
+                            </SheetHeader>
+                            <div className={'mt-8'}>
+                                {hasLeague()}
+                            </div>
+                        </SheetContent>
+                    </Sheet>
+
+                    <Button variant={'outline'}>
+                        <Link href={'/barangayAdmin/page/match'}>
+                            Match Team
+                        </Link>
+                    </Button>
+                </div>
+
 
                 <GenerateBracketTeamAutomatically teams={includedTeams} currentLeague={activeLeague}/>
             </div>

@@ -97,6 +97,6 @@ export default function GenerateBracketTeamAutomatically({teams,currentLeague}:{
     }
 
     return (
-        <Button variant={'outline'} onClick={handleGenerateBracket} disabled={isPending}>{isPending ? 'Generating...' : 'Generate bracket automatically'}</Button>
+        <Button variant={'secondary'} onClick={handleGenerateBracket} disabled={isPending}>{isPending ? 'Generating...' : 'Generate bracket automatically'}</Button>
     )
 }

@@ -17,6 +17,7 @@ export interface Match {
     notes: string;
     status: MatchStatusType;
     statistics: object;
+    matchedTeam: MatchTeam[];
 }
 
 export interface MatchTeam {

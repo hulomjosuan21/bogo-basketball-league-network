@@ -8,7 +8,8 @@ export enum LEAGUE_STATUS {
 export enum BracketType {
     HIGHER = "higher bracket",
     LOWER = "lower bracket",
-    CROSSED = "crossed bracket"
+    CROSSED = "crossed bracket",
+    GROUP = "group bracket"
 }
 
 export default interface League {
