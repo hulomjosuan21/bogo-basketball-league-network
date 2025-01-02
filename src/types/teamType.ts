@@ -33,7 +33,13 @@ export default interface Team {
         bracket: null | BracketType
     }[];
     teamName: string;
-    teamMetaData: unknown;
+    teamMetaData: {
+        assistantCoach: string;
+        teamCaptain: string;
+        teamManager: string;
+        contactNumber: string;
+        contactEmail: string;
+    };
     teamImage: string | null;
     status: TEAM_STATUS[];
     subStatus: TEAM_SUB_STATUS[];

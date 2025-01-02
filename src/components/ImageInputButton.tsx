@@ -38,7 +38,7 @@ export default function ImageInputButton({setImageUrlAction,bucket}:Props){
                 </AspectRatio>
             </div>
             <div className={'flex gap-4 items-center'}>
-                <Input type="file" accept="image/*" onChange={handleFileChange}/>
+                <Input type="file" accept="image/*" onChange={handleFileChange} required={true}/>
                 <Button onClick={handleUploadElement}>Upload</Button>
             </div>
         </div>

@@ -10,6 +10,7 @@ export const scheduleMatchOperation = async (matchData: Partial<InsertMatchType>
     try {
         await db.insert(matchesTable).values(matchData as InsertMatchType)
         revalidatePath('/barangayAdmin/page/match')
+        revalidatePath('/view/barangay')
     } catch (error) {
         throw new Error(AppToolkit.getErrorMessage(error));
     }
@@ -41,6 +42,7 @@ export const addTeamToMatchOperation = async (teamData: Partial<InsertMatchTeamT
     try{
         await db.insert(matchTeamsTable).values(teamData as InsertMatchTeamType)
         revalidatePath('/barangayAdmin/page/match')
+        revalidatePath('/view/barangay')
     } catch (error) {
         throw new Error(AppToolkit.getErrorMessage(error));
     }

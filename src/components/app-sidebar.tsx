@@ -12,7 +12,7 @@ import {
     Waypoints,
     PersonStanding,
     Workflow,
-    LogOut, ShieldAlert,Joystick
+    LogOut, ShieldAlert, Joystick, StickyNote
 } from "lucide-react";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {signOutAction} from "@/actions/appActions";
@@ -22,6 +22,11 @@ import {getBarangay} from "@/actions/barangayActions";
 import Barangay from "@/types/barangayType";
 
 const managementItems = [
+    {
+        title: "Announcement",
+        url: "/barangayAdmin/page/announcement",
+        icon: StickyNote
+    },
     {
         title: "League",
         url: "/barangayAdmin/page/league",
