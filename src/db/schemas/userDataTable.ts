@@ -1,7 +1,7 @@
 import { pgTable, uuid, text, date, pgEnum } from "drizzle-orm/pg-core";
 import RoleTypes from "@/types/roleTypes";
 
-export const userRoleEnum =pgEnum("role_type", [RoleTypes.Player,RoleTypes.Coach]);
+export const userRoleEnum =pgEnum("role_type", [RoleTypes.Player,RoleTypes.TeamManager]);
 
 export const usersDataTable = pgTable("usersData", {
     id: uuid("id").defaultRandom().primaryKey(),

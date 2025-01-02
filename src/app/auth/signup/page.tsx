@@ -58,7 +58,7 @@ export default function Page(){
                         </SelectTrigger>
                         <SelectContent position="popper">
                             <SelectItem value={RoleTypes.Player}>Player</SelectItem>
-                            <SelectItem value={RoleTypes.Coach}>Coach</SelectItem>
+                            <SelectItem value={RoleTypes.TeamManager}>Team manager</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>

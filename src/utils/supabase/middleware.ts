@@ -76,6 +76,7 @@ export async function updateSession(request: NextRequest) {
         coach: [`/${RoleTypes.Coach}`,`/onboard/${RoleTypes.Coach}`],
         barangayAdmin: [`/${RoleTypes.BarangayAdmin}`],
         super: [`/${RoleTypes.SUPER}`],
+        teamManager: [`/${RoleTypes.TeamManager}`]
     };
 
     const allowedRoutes = roleRoutes[role || ''] || [];
