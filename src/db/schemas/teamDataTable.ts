@@ -5,7 +5,7 @@ export const teamsTable = pgTable('teamsTable', {
     createdAt: date("createdAt").defaultNow().notNull(),
     updatedAt: date("updatedAt").defaultNow().notNull(),
 
-    coachId: text("coachId").notNull(),
+    teamManagerId: text("teamManagerId").notNull(),
     teamId: text("teamId").notNull().unique(),
     leagueIds: jsonb('leagueIds'),
     teamName: text('teamName').notNull(),

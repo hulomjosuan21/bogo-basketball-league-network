@@ -127,11 +127,6 @@ export default function Page(){
                         </div>
 
                         <div className="flex flex-col space-y-1.5">
-                            <Label htmlFor="teamManager">Team manager</Label>
-                            <Input id="teamManager" name="teamManager" required={true}/>
-                        </div>
-
-                        <div className="flex flex-col space-y-1.5">
                             <Label htmlFor="contactNumber">Contact number</Label>
                             <Input id="contactNumber" name="contactNumber" required={true} type={'tel'}/>
                         </div>

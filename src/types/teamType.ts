@@ -25,7 +25,7 @@ export default interface Team {
     readonly createdAt: string;
     readonly updatedAt: string;
 
-    coachId: string;
+    teamManagerId: string;
     teamId: string;
     leagueIds: {
         leagueId: string;

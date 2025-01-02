@@ -80,6 +80,8 @@ export async function updateSession(request: NextRequest) {
     };
 
     const allowedRoutes = roleRoutes[role || ''] || [];
+    console.log(`Allowed routes for role ${allowedRoutes ? 'True' : 'Not'}`)
+
     const isAllowed = allowedRoutes.some((route: string) => pathname.startsWith(route));
 
     // !pathname.startsWith(`/${RoleTypes.BarangayAdmin}`)

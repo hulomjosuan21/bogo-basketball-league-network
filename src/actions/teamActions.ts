@@ -9,6 +9,7 @@ import Team, {TEAM_STATUS} from "@/types/teamType";
 import {revalidatePath} from "next/cache";
 import {createClient} from "@/utils/supabase/server";
 import {BracketType} from "@/types/leagueTypes";
+import {getTeamManager} from "@/actions/teamManagerActions";
 
 export async function getAllTeamsNoCoachAction() {
     const supabase = await createClient();
@@ -63,32 +64,32 @@ export async function getAllTeamAction(byCoach = false) {
 }
 
 export async function insertNewTeamDataAction(formData: FormData){
-    const { coach } = await getCoach();
+    const { teamManager } = await getTeamManager()
 
-    if(!coach){
-        return { errorMessage: 'No coach found!' }
+    if(!teamManager){
+        return { errorMessage: 'No team manager found!' }
     }
 
     const teamName = formData.get('teamName') as string;
     const teamImage = formData.get('teamImage') as string;
     const assistantCoach = formData.get('assistantCoach') as string;
     const teamCaptain = formData.get('assistantCoach') as string;
-    const teamManager = formData.get('assistantCoach');
     const contactNumber = formData.get('assistantCoach') as string;
     const contactEmail = formData.get('assistantCoach');
 
     const newTeam: InsertTeamsTableType = {
-        coachId: coach.coachId,
+        teamManagerId: teamManager.teamManagerId,
         teamId: AppToolkit.generateUid(teamName),
         teamName,
         teamImage,
-        teamMetaData: {assistantCoach,teamCaptain,teamManager,contactNumber,contactEmail},
+        teamMetaData: {assistantCoach,teamCaptain,teamManager: teamManager.fullName,contactNumber,contactEmail},
         status: [TEAM_STATUS.NewEntry],
+        playerIds: []
     }
 
     try {
         await db.insert(teamsTable).values(newTeam);
-        revalidatePath('/coach/team');
+        revalidatePath('/team-manager/page/team');
         return { errorMessage: null }
     }catch (error){
         return { errorMessage: AppToolkit.getErrorMessage(error) }

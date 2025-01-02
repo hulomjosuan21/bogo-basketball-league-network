@@ -21,7 +21,7 @@ import Image from "next/image";
 import fallBackImage from "@/assets/images/fallbackImage.png";
 import Link from "next/link";
 
-export default function CoachCreateTeamComponent(){
+export default function TeamManagerCreateTeamComponent(){
     const [dialogOpen, setDialogOpen] = useState(false);
     const [isPending, startTransition] = useTransition()
     const { showToast } = useAppToast()

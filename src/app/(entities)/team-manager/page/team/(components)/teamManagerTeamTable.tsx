@@ -16,7 +16,7 @@ type Props = {
     teams: Team[],
 }
 
-export default function CoachTeamTable({teams}:Props){
+export default function TeamManagerTeamTable({teams}:Props){
     const { league } = useSelector((state: RootState) => state.app);
     const [isJoining, startTransitionJoining] = useTransition()
     const { showToast } = useAppToast();

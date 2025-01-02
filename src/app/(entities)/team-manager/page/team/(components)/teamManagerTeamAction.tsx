@@ -25,13 +25,14 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import useTeamPlayer from "@/hooks/use-teamPlayer";
+import TeamManagerCreateTeamComponent from "@/app/(entities)/team-manager/page/team/(components)/teamManagerCreateTeam";
 
 type Props = {
     team: Team,
     coachTeam: Team[]
 }
 
-export default function CoachTeamAction({team,coachTeam}:Props){
+export default function TeamManagerManagerTeamAction({team,coachTeam}:Props){
     const { showToast} = useAppToast();
     const [searchedPlayers, setPlayers] = useState<Player[]>([]);
     const [fullName, setFullName] = useState('');
