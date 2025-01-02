@@ -15,7 +15,18 @@ import {DropArea} from "@/app/(admin)/barangayAdmin/page/match/(components)/drop
 import {DraggingOverlay} from "@/app/(admin)/barangayAdmin/page/match/(components)/drag-overlay";
 import {Badge} from "@/components/ui/badge";
 import {updateMatchStatusAction} from "@/actions/matchActions";
-
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+  } from "@/components/ui/alert-dialog"
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+  
 type Props = {
     teams: ToMatchTeam[],
     league: League,
@@ -30,6 +41,9 @@ export default function TournamentBracket({teams,league,matches}:Props) {
         awayTeam: null,
     })
     const [activeId, setActiveId] = useState<string | null>(null)
+    const [openDialog, setOpenDialog] = useState(false)
+    const [scheduleDate, setScheduleDate] = useState<string | null>(null)
+
 
     const sensors = useSensors(
         useSensor(MouseSensor),
@@ -68,6 +82,10 @@ export default function TournamentBracket({teams,league,matches}:Props) {
     const handleScheduleFunction = async (homeTeam: ToMatchTeam,awayTeam: ToMatchTeam) => {
         const generateMatchId = AppToolkit.generateUid("bogo-basketball-league-network-match")
 
+        if(!scheduleDate) {
+            return
+        }
+
         let bracket: BracketType;
         if (homeTeam.bracket === awayTeam.bracket) {
             bracket = homeTeam.bracket;
@@ -77,7 +95,7 @@ export default function TournamentBracket({teams,league,matches}:Props) {
 
         await scheduleMatch({
             matchId: generateMatchId,
-            date: new Date(),
+            date: new Date(scheduleDate),
             durationMinutes: 90,
             leagueId: league.leagueId,
             bracket: bracket,
@@ -98,12 +116,17 @@ export default function TournamentBracket({teams,league,matches}:Props) {
     }
 
     const handleSchedule = async () => {
+        if(!scheduleDate) {
+            showToast('Error', 'Please select a schedule date', 'destructive');
+            return
+        }
         startTransition(async () => {
             if (matchUp.homeTeam && matchUp.awayTeam) {
                 try{
                     await handleScheduleFunction(matchUp.homeTeam,matchUp.awayTeam)
                     showToast('Successfully matched!', `${matchUp.homeTeam.teamName} vs ${matchUp.awayTeam.teamName}`, 'default');
                     setMatchUp({ homeTeam: null, awayTeam: null });
+                    setOpenDialog(false)
                 } catch (error) {
                     showToast('Error', AppToolkit.getErrorMessage(error), 'destructive');
                 }
@@ -199,12 +222,35 @@ export default function TournamentBracket({teams,league,matches}:Props) {
         )
     }
 
+    const scheduleTeamDialog = (
+        <AlertDialog open={openDialog}>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                <AlertDialogTitle className={'text-sm font-semibold'}>{`${matchUp.homeTeam?.teamName} vs ${matchUp.awayTeam?.teamName}`}</AlertDialogTitle>
+                </AlertDialogHeader>
+
+                <div>
+                    <div className="flex flex-col space-y-1.5">
+                        <Label htmlFor="date">Schedule date and time</Label>
+                        <Input id='date' type='datetime-local' onChange={e => setScheduleDate(e.target.value)}/>
+                    </div>
+                </div>
+
+                <AlertDialogFooter>
+                <AlertDialogCancel onClick={() => setOpenDialog(false)}>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={handleSchedule}>Continue</AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+            </AlertDialog>
+    )
+
     if(isPending) {
         return <Loading text={'Scheduling match...'} height={'h-[calc(100vh-80px)]'}/>
     }
 
     return (
         <div className="min-h-[100vh-50px] flex flex-col items-center">
+            {scheduleTeamDialog}
             <div className={'w-full p-4'}>
                 <DndContext
                     sensors={sensors}
@@ -232,7 +278,7 @@ export default function TournamentBracket({teams,league,matches}:Props) {
                                     <span className="text-2xl font-bold">VS</span>
                                     <div className="flex gap-4 border-t w-full justify-center p-2">
                                         <Button
-                                            onClick={handleSchedule}
+                                            onClick={() => setOpenDialog(true)}
                                             disabled={!matchUp.homeTeam || !matchUp.awayTeam}
                                             className={''}
                                         >

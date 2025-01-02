@@ -9,6 +9,7 @@ import {getActiveLeagueAction} from "@/actions/leagueActions";
 import {Button} from "@/components/ui/button";
 import Link from "next/link";
 import {getUser} from "@/utils/supabase/server";
+import Viewer from "@/app/view/barangay/(components)/liveStream";
 
 export default async function Page({params}:{params:{id:string}}){
     const { id } = await params;
@@ -90,6 +91,8 @@ export default async function Page({params}:{params:{id:string}}){
                         }
                     </div>
                 </div>
+
+            <Viewer/>
             </section>
 
         </main>

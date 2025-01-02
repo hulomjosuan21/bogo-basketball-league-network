@@ -25,8 +25,6 @@ export default async function Page(){
         getTeamsByLeagueIdAndIsAllowed(activeLeague.leagueId,true)
     ])
 
-    console.log(`Matched team ${JSON.stringify(matches, null, 2)}`)
-
     const toMatchTeam: ToMatchTeam[] = findTeamsByLeagueId(teams, activeLeague.leagueId)
 
     return (
