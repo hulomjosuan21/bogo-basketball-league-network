@@ -43,7 +43,7 @@ export default function TournamentBracket({teams,league,matches}:Props) {
     const [activeId, setActiveId] = useState<string | null>(null)
     const [openDialog, setOpenDialog] = useState(false)
     const [scheduleDate, setScheduleDate] = useState<string | null>(null)
-
+    const [notes, setNotes] = useState<string | null>(null)
 
     const sensors = useSensors(
         useSensor(MouseSensor),
@@ -99,7 +99,7 @@ export default function TournamentBracket({teams,league,matches}:Props) {
             durationMinutes: 90,
             leagueId: league.leagueId,
             bracket: bracket,
-            notes: "This is a test match",
+            notes: notes || 'No notes',
         });
 
         await addTeamToMatch({
@@ -229,16 +229,21 @@ export default function TournamentBracket({teams,league,matches}:Props) {
                 <AlertDialogTitle className={'text-sm font-semibold'}>{`${matchUp.homeTeam?.teamName} vs ${matchUp.awayTeam?.teamName}`}</AlertDialogTitle>
                 </AlertDialogHeader>
 
-                <div>
+                <div className={'grid gap-4'}>
                     <div className="flex flex-col space-y-1.5">
                         <Label htmlFor="date">Schedule date and time</Label>
                         <Input id='date' type='datetime-local' onChange={e => setScheduleDate(e.target.value)}/>
+                    </div>
+
+                    <div className="flex flex-col space-y-1.5">
+                        <Label htmlFor="notes">Match note</Label>
+                        <Input id='notes' onChange={e => setNotes(e.target.value)}/>
                     </div>
                 </div>
 
                 <AlertDialogFooter>
                 <AlertDialogCancel onClick={() => setOpenDialog(false)}>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={handleSchedule}>Continue</AlertDialogAction>
+                <AlertDialogAction onClick={handleSchedule}>Match</AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
             </AlertDialog>
@@ -251,6 +256,10 @@ export default function TournamentBracket({teams,league,matches}:Props) {
     return (
         <div className="min-h-[100vh-50px] flex flex-col items-center">
             {scheduleTeamDialog}
+
+            <div className={'p-4'}>
+                <span className={'font-semibold'}>Match & Schedule Teams</span>
+            </div>
             <div className={'w-full p-4'}>
                 <DndContext
                     sensors={sensors}
@@ -300,6 +309,10 @@ export default function TournamentBracket({teams,league,matches}:Props) {
 
                     <DraggingOverlay name={activeDragTeam?.teamName ?? null} teamImage={activeDragTeam?.teamImage ?? null}/>
                 </DndContext>
+            </div>
+
+            <div className={'p-4'}>
+                <span className={'font-semibold'}>Games Schedules</span>
             </div>
 
             <div className={'w-full'}>

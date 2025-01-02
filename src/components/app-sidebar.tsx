@@ -12,7 +12,6 @@ import {
     Waypoints,
     PersonStanding,
     Workflow,
-    CalendarCheck2,
     LogOut, ShieldAlert,Joystick
 } from "lucide-react";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
@@ -29,27 +28,22 @@ const managementItems = [
         icon: Waypoints
     },
     {
-        title: "Player",
+        title: "Player Submission",
         url: "/barangayAdmin/page/players",
         icon: PersonStanding
     },
     {
-        title: "Team",
+        title: "Team & Bracket",
         url: "/barangayAdmin/page/team",
         icon: UsersRound
     },
     {
-        title: "Bracket",
-        url: "/barangayAdmin/page/bracket",
+        title: "Schedule & Match Team",
+        url: "/barangayAdmin/page/match",
         icon: Workflow
     },
     {
-        title: "Schedule Game",
-        url: "/barangayAdmin/page/schedule",
-        icon: CalendarCheck2
-    },
-    {
-        title: "Game",
+        title: "Live Game",
         url: "/barangayAdmin/page/game",
         icon: Joystick
     }

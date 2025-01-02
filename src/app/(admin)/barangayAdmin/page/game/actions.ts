@@ -1,29 +1,102 @@
-'use server'
+import { createClient } from '@/utils/supabase/server'
+import { LiveStream } from './types/live-stream'
 
-import {createClient} from "@/utils/supabase/server";
+export async function subscribeToLiveStream(videoId: string, callback: (state: LiveStream) => void) {
+  const supabase = await createClient()
+  
+  const channel = supabase
+    .channel(`live_stream_${videoId}`)
+    .on(
+      'postgres_changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'live_streams',
+        filter: `video_id=eq.${videoId}`,
+      },
+      (payload) => {
+        callback(payload.new as LiveStream)
+      }
+    )
+    .subscribe()
 
-export const uploadVideo = async (videoBlob: Blob) => {
-    const supabase = await createClient()
+  return () => {
+    channel.unsubscribe()
+  }
+}
 
-    const { data, error } = await supabase.storage
-        .from('videos')
-        .upload(`video-${Date.now()}.mp4`, videoBlob);
+export async function startLiveStream(videoId: string) {
+  const supabase = await createClient()
+  
+  // First check if the stream exists
+  const { data: existingStream } = await supabase
+    .from('live_streams')
+    .select()
+    .eq('video_id', videoId)
+    .single()
 
-    if (error) {
-        throw new Error(`Error uploading video: ${error.message}`);
-    }
+  if (existingStream) {
+    // If it exists, just update it
+    const { data, error } = await supabase
+      .from('live_streams')
+      .update({
+        is_live: true,
+        started_at: new Date().toISOString(),
+      })
+      .eq('video_id', videoId)
+      .select()
+      .single()
 
-    return data;
-};
+    if (error) throw error
+    return data
+  } else {
+    // If it doesn't exist, insert it
+    const { data, error } = await supabase
+      .from('live_streams')
+      .insert({
+        video_id: videoId,
+        is_live: true,
+        started_at: new Date().toISOString(),
+      })
+      .select()
+      .single()
 
-export const saveVideoIdToDatabase = async (videoId: string) => {
-    const supabase = await createClient()
+    if (error) throw error
+    return data
+  }
+}
 
-    const { error } = await supabase
-        .from('Match')
-        .insert({ videoId });
+export async function stopLiveStream(videoId: string) {
+  const supabase = await createClient()
+  
+  const { data, error } = await supabase
+    .from('live_streams')
+    .update({
+      is_live: false,
+      started_at: null,
+    })
+    .eq('video_id', videoId)
+    .select()
+    .single()
 
-    if (error) {
-        throw new Error(`Error saving video ID to database: ${error.message}`);
-    }
-};
+  if (error) throw error
+  return data
+}
+
+// Add a helper function to check stream status
+export async function getStreamStatus(videoId: string) {
+  const supabase = await createClient()
+  
+  const { data, error } = await supabase
+    .from('live_streams')
+    .select()
+    .eq('video_id', videoId)
+    .single()
+
+  if (error && error.code !== 'PGRST116') { // PGRST116 is "not found" error
+    throw error
+  }
+
+  return data
+}
+
