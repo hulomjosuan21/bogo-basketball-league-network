@@ -1,5 +1,8 @@
 import {createClient, getUser} from "@/utils/supabase/server";
 import TeamManagerType from "@/types/managerType";
+import AppToolkit from "@/lib/app-toolkit";
+import { db } from "@/db/database";
+import { InsertTeamManagerType, teamManagerTable } from "@/db/schemas/teamManagerDataTable";
 
 export async function getTeamManager(){
     const [{ user }, supabase] = await Promise.all([getUser(), createClient()]);
@@ -10,10 +13,25 @@ export async function getTeamManager(){
     const { data } = await supabase.from('teamsTable').select().eq('userId', user.id).single();
 
     if(!data){
-        throw new Error('Team Manager not found');
+        return { user, teamManager: null }
     }
 
     const teamManager: TeamManagerType = data
 
     return { user, teamManager }
+}
+
+export async function insertNewTeamManagerDataAction(firstName: string,lastName: string,userId: string){
+    try {
+        const newTeamManager: InsertTeamManagerType = {
+            fullName: `${firstName} ${lastName}`,
+            userId: userId,
+            teamManagerId: AppToolkit.generateUid(firstName),
+            teamId: AppToolkit.generateUid(lastName),
+        }
+        await db.insert(teamManagerTable).values(newTeamManager);
+        return { errorMessage: null }
+    }catch(error){
+        return { errorMessage: AppToolkit.getErrorMessage(error) }
+    }
 }

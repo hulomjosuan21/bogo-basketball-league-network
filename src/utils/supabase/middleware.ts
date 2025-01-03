@@ -63,7 +63,7 @@ export async function updateSession(request: NextRequest) {
         : { data: null };
 
     const role = barangayData?.role || userData?.role || undefined;
-    console.log(`Role in middleware ${role?.toString()}`)
+    console.log(`Role in middleware: ${role?.toString()}`)
 
     if (!role && pathname !== '/' && !pathname.startsWith('/auth') && !pathname.startsWith('/view')) {
         const url = request.nextUrl.clone();
@@ -76,15 +76,15 @@ export async function updateSession(request: NextRequest) {
         coach: [`/${RoleTypes.Coach}`,`/onboard/${RoleTypes.Coach}`],
         barangayAdmin: [`/${RoleTypes.BarangayAdmin}`],
         super: [`/${RoleTypes.SUPER}`],
-        teamManager: [`/${RoleTypes.TeamManager}`]
+        team_manager: [`/${RoleTypes.TeamManager}`] // Ensure the key matches the role name
     };
 
     const allowedRoutes = roleRoutes[role || ''] || [];
-    console.log(`Allowed routes for role ${allowedRoutes ? 'True' : 'Not'}`)
+    console.log(`Allowed routes for role ${role}: ${allowedRoutes.join(', ')}`)
+    console.log(`Current pathname: ${pathname}`)
 
     const isAllowed = allowedRoutes.some((route: string) => pathname.startsWith(route));
-
-    // !pathname.startsWith(`/${RoleTypes.BarangayAdmin}`)
+    console.log(`Is allowed: ${isAllowed}`)
 
     if (!isAllowed && pathname !== '/' && !pathname.startsWith('/auth') && !pathname.startsWith('/view')) {
         const url = request.nextUrl.clone();

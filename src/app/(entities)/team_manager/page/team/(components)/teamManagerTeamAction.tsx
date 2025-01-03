@@ -25,7 +25,6 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import useTeamPlayer from "@/hooks/use-teamPlayer";
-import TeamManagerCreateTeamComponent from "@/app/(entities)/team-manager/page/team/(components)/teamManagerCreateTeam";
 
 type Props = {
     team: Team,

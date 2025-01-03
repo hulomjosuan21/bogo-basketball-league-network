@@ -3,7 +3,7 @@ enum RoleTypes {
     BarangayAdmin ='barangayAdmin',
     Player = 'player',
     Coach = 'coach',
-    TeamManager = 'team-manager'
+    TeamManager = 'team_manager'
 }
 
 export default RoleTypes
