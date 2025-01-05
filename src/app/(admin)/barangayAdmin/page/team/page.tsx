@@ -113,7 +113,7 @@ export default async function Page(){
                 <div className={'flex items-center gap-2'}>
                     <Sheet>
                         <SheetTrigger asChild={true} disabled={!activeLeague}>
-                            <Button variant={'outline'}>Request</Button>
+                            <Button size={'sm'}>Team Requests</Button>
                         </SheetTrigger>
                         <SheetContent>
                             <SheetHeader>
@@ -125,7 +125,7 @@ export default async function Page(){
                         </SheetContent>
                     </Sheet>
 
-                    <Button variant={'outline'} disabled={includedTeams.length < 4}>
+                    <Button variant={'outline'} disabled={includedTeams.length < 4} size={'sm'}>
                         <Link href={'/barangayAdmin/page/match'}>
                             Match Team
                         </Link>

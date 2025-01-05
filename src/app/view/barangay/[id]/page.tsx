@@ -110,7 +110,7 @@ export default async function Page({params}:{params:{id:string}}){
                             <span className={'text-center font-semibold text-lg flex justify-center w-full mb-2'}>Match Schedule</span>
 
                             <div>
-                                <BarangayMatchScheduleComponent matches={matches}/>
+                                <BarangayMatchScheduleComponent/>
                             </div>
                         </div>
                     ) : (

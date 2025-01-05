@@ -68,7 +68,7 @@ export default function LandingPage({images,barangays}:Props){
                             <span
                                 className={'motion-preset-compress mx-4 font-semibold text-2xl sm:text-4xl break-words text-center'}>Bogo Basketball League Network</span>
                             <div className={'flex justify-center items-center gap-4'}>
-                                <Button className={'motion-preset-compress '} asChild={true}>
+                                <Button className={'motion-preset-compress'} asChild={true}>
                                     <Link href={'/auth/signup'}>Get started</Link>
                                 </Button>
                                 <Button variant={'ghost'} size={'icon'} onClick={handleDriver}><Info
