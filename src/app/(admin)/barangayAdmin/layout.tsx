@@ -6,6 +6,7 @@ import {ToggleTheme} from "@/components/toggle-theme";
 import useDriver from "@/hooks/use-driver";
 import {Button} from "@/components/ui/button";
 import {Info} from "lucide-react";
+import SmallBackButton from "@/components/small-backbutton";
 
 export default function Layout({children}:{children: ReactNode}){
     const { start } = useDriver()
@@ -50,6 +51,7 @@ export default function Layout({children}:{children: ReactNode}){
                 <div className={'sidebar-trigger'}>
                     <SidebarTrigger />
                     <div className={'flex items-center gap-4'}>
+                        <SmallBackButton btnClassName={'h-7 w-7'} btnVariant={'ghost'}/>
                         <Button className={'h-7 w-7'} variant={'ghost'} onClick={handleDriver}><Info className={'icon-sm'}/></Button>
                         <ToggleTheme btnClassName={'h-7 w-7'} btnVariant={'ghost'}/>
                     </div>

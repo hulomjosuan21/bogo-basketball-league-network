@@ -1,6 +1,6 @@
 import {ReactNode} from "react";
 import AppDock from "@/components/app-dock";
-import {ChartBarBig, Home, UsersRound} from "lucide-react";
+import {ChartBarBig, Home, UserRound, UsersRound} from "lucide-react";
 import TeamManagerProvider from "@/providers/teamManagerProvider";
 
 const initialDockItems = [
@@ -18,6 +18,11 @@ const initialDockItems = [
         Icon: UsersRound,
         text: 'Teams',
         url: '/team_manager/page/team'
+    },
+    {
+        Icon: UserRound,
+        text: 'Profile',
+        url: '/team_manager/page/profile'
     }
 ]
 

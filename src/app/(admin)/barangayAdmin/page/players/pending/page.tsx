@@ -1,18 +1,15 @@
-import {getAllPlayersSubmitLeague} from "@/actions/playerActions";
-import {getActiveLeagueAction} from "@/actions/leagueActions";
-import {getBarangay} from "@/actions/barangayActions";
-import {Button} from "@/components/ui/button";
-import Link from "next/link";
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
     TableHead,
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import IncludedPlayerButton from "@/app/(admin)/barangayAdmin/page/players/actionComponent";
+import {getBarangay} from "@/actions/barangayActions";
+import {getActiveLeagueAction} from "@/actions/leagueActions";
+import {getAllPlayersSubmitLeague} from "@/actions/playerActions";
+import CheckPlayerButton from "@/app/(admin)/barangayAdmin/page/players/pending/actionComponent";
 
 export default async function Page(){
     const { barangay } = await getBarangay();
@@ -31,14 +28,14 @@ export default async function Page(){
         )
     }
 
-    const { players } = await getAllPlayersSubmitLeague(activeLeague.leagueId,true);
+    const { players } = await getAllPlayersSubmitLeague(activeLeague.leagueId,false);
 
-    const approvedPlayersTable = (
-        <Table className={'border-y'}>
+    const pendingPlayerTable = (
+        <Table className={'border-b'}>
             <TableHeader>
                 <TableRow className={'bg-secondary'}>
                     <TableHead>Name</TableHead>
-                    <TableHead></TableHead>
+                    <TableHead className="text-right"></TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
@@ -48,7 +45,7 @@ export default async function Page(){
                             <TableCell className="font-medium">{player.fullName}</TableCell>
                             <TableCell>
                                 <div className={'flex items-center justify-end'}>
-                                    <IncludedPlayerButton player={player}/>
+                                    <CheckPlayerButton player={player}/>
                                 </div>
                             </TableCell>
                         </TableRow>
@@ -56,23 +53,14 @@ export default async function Page(){
                 }
             </TableBody>
         </Table>
-
     )
 
     return (
         <main>
-            <div className={'p-2'}>
-                <Button asChild={true} size={'sm'}>
-                    <Link href={'/barangayAdmin/page/players/pending'}>
-                        Player Requests
-                    </Link>
-                </Button>
-            </div>
-
             <div>
                 {
                     players.length > 0 ? (
-                        approvedPlayersTable
+                        pendingPlayerTable
                     ): (
                         <div className={'h-[calc(100vh-100px)] grid place-items-center font-semibold'}>
                             No Player!

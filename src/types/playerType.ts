@@ -14,20 +14,28 @@ export interface PlayerTeamMetaData {
 }
 
 export interface PlayerLeagueMetaData {
-    leagueId?: string;
-    requirements?: {
-        validIdImageUrl?: string;
-        medicalImageUrl?: string;
+    leagueId: string;
+    requirements: {
+        residency: string;
+        identityFile: string;
     };
     isAllowed: boolean;
+}
+
+export interface PartialPlayer {
+    fullName: string;
+    playerId: string;
+    jerseyNumber: number;
 }
 
 export interface Player {
     readonly id: string;
     readonly userId: string;
     readonly playerId: string;
+    email: string,
+    phoneNumber: string,
     fullName: string;
-    leagueMetadata: PlayerLeagueMetaData[];
+    leagueMetadata: PlayerLeagueMetaData | null;
     teamMetaData: PlayerTeamMetaData[];
     playerImage: string | null;
     nickname: string;

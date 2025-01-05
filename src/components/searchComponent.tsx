@@ -13,7 +13,6 @@ import RoleTypes from "@/types/roleTypes";
 import useSearch from "@/hooks/use-search";
 import {useState} from "react";
 import {Player} from "@/types/playerType";
-import Coach from "@/types/coachType";
 import Barangay from "@/types/barangayType";
 import {
     AlertDialog,
@@ -33,14 +32,13 @@ export default function SearchComponent(){
     const router = useRouter()
     const {setEntity,handleSearch ,setName,isLoading} = useSearch();
     const [playersFound, setPlayersFound] = useState<Player[]>([])
-    const [coachesFound, setCoachesFound] = useState<Coach[]>([])
     const [barangaysFound, setBarangaysFound] = useState<Barangay[]>([])
     const [foundEntity, setFoundEntity] = useState('')
     const [dialogOpen, setDialogOpen] = useState(false)
     const { showToast } = useAppToast()
 
     const handleSearchClick = async () => {
-        const { entity, players, coaches, barangays, empty } = await handleSearch()
+        const { entity, players, barangays, empty } = await handleSearch()
 
         if(empty) {
             showToast('Enter name', null, 'default')
@@ -55,14 +53,6 @@ export default function SearchComponent(){
                 setDialogOpen(true)
             }else{
                 showToast('No player found', null, 'default')
-            }
-        }else if(entity === RoleTypes.Coach) {
-            console.log(`Coaches: ${JSON.stringify(coaches, null, 2)}`)
-            if(coaches.length > 0){
-                setCoachesFound(coaches)
-                setDialogOpen(true)
-            }else{
-                showToast('No coach found', null, 'default')
             }
         }else if(entity === RoleTypes.BarangayAdmin) {
             console.log(`Barangays: ${JSON.stringify(barangays, null, 2)}`)
@@ -113,43 +103,6 @@ export default function SearchComponent(){
                                         <div
                                             className={'flex items-center justify-between gap-4 mb-2 bg-secondary rounded-md p-2'}>
                                             <span>No players found</span>
-                                            <div>
-                                                <Button variant={'outline'} size={'sm'} disabled={true}>
-                                                    <ArrowUpRight/>
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    )
-                                }
-                            </ScrollArea>
-                        )
-                    }
-
-                    {
-                        foundEntity === RoleTypes.Coach && (
-                            <ScrollArea className="h-[300px]">
-                                {
-                                    coachesFound.length > 0 ? coachesFound.map((coach, index) => (
-                                        <div key={index}
-                                             className={'flex items-center justify-between gap-4 mb-2 bg-secondary rounded-md p-2'}>
-                                            <div className={'flex items-center gap-2'}>
-                                                <Avatar>
-                                                    <AvatarImage src={AppToolkit.ImageWithFallBack(coach.coachImage).toString()}/>
-                                                    <AvatarFallback>CN</AvatarFallback>
-                                                </Avatar>
-                                                <span>{AppToolkit.TextWithLimit(coach.fullName,24)}</span>
-                                            </div>
-                                            <div>
-                                            <Button variant={'outline'} size={'sm'}
-                                                        onClick={() => handleRedirect(foundEntity, coach.coachId)}>
-                                                    <ArrowUpRight/>
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    )) : (
-                                        <div
-                                            className={'flex items-center justify-between gap-4 mb-2 bg-secondary rounded-md p-2'}>
-                                            <span>No coaches found</span>
                                             <div>
                                                 <Button variant={'outline'} size={'sm'} disabled={true}>
                                                     <ArrowUpRight/>
@@ -215,7 +168,6 @@ export default function SearchComponent(){
                 </SelectTrigger>
                 <SelectContent>
                     <SelectItem value={RoleTypes.Player}>Player</SelectItem>
-                    <SelectItem value={RoleTypes.Coach}>Coach</SelectItem>
                     <SelectItem value={RoleTypes.BarangayAdmin}>Barangay</SelectItem>
                 </SelectContent>
             </Select>

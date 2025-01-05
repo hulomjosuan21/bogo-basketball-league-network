@@ -38,6 +38,24 @@ export async function updateSession(request: NextRequest) {
         data: { user },
     } = await supabase.auth.getUser();
 
+    if (user) {
+        supabase
+            .channel('notifications')
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'public',
+                    table: 'notifications',
+                    filter: `user_id=eq.${user.id}`,
+                },
+                (payload) => {
+                    console.log('Notification change received:', payload)
+                }
+            )
+            .subscribe()
+    }
+
     const { pathname } = request.nextUrl;
 
     if (!user && pathname !== '/' && !pathname.startsWith('/auth') && !pathname.startsWith('/view')) {
@@ -62,6 +80,8 @@ export async function updateSession(request: NextRequest) {
             .single()
         : { data: null };
 
+    console.log(`User data in middleware ${JSON.stringify(userData,null,2)}`)
+
     const role = barangayData?.role || userData?.role || undefined;
     console.log(`Role in middleware: ${role?.toString()}`)
 
@@ -73,7 +93,6 @@ export async function updateSession(request: NextRequest) {
 
     const roleRoutes: Record<string, string[]> = {
         player: [`/${RoleTypes.Player}`,`/onboard/${RoleTypes.Player}`],
-        coach: [`/${RoleTypes.Coach}`,`/onboard/${RoleTypes.Coach}`],
         barangayAdmin: [`/${RoleTypes.BarangayAdmin}`],
         super: [`/${RoleTypes.SUPER}`],
         team_manager: [`/${RoleTypes.TeamManager}`] // Ensure the key matches the role name

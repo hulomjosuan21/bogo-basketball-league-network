@@ -27,6 +27,14 @@ export default async function Page(){
 
     const toMatchTeam: ToMatchTeam[] = findTeamsByLeagueId(teams, activeLeague.leagueId)
 
+    if(!(toMatchTeam.length > 0)){
+        return (
+            <div className={'h-[calc(100vh-60px)] grid place-items-center font-semibold'}>
+                No team to match yet!
+            </div>
+        )
+    }
+
     return (
         <main>
             <TournamentBracket teams={toMatchTeam} league={activeLeague} matches={matches}/>

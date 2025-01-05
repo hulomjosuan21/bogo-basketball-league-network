@@ -4,7 +4,6 @@ import {Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Table
 import {AspectRatio} from "@/components/ui/aspect-ratio";
 import Image from "next/image";
 import AppToolkit from "@/lib/app-toolkit";
-import CoachTeamAction from "@/app/(entities)/coach/page/team/coachTeamAction";
 import {useSelector} from "react-redux";
 import {RootState} from "@/context/store";
 import {Button} from "@/components/ui/button";
@@ -68,12 +67,12 @@ export default function TeamManagerTeamTable({teams}:Props){
                                 </TableCell>
                                 <TableCell>
                                     <div className={'flex items-center justify-end gap-2'}>
-                                        <CoachTeamAction team={team} coachTeam={teams}/>
-                                        {
-                                            league && (
-                                                <Button variant={'outline'} size={'sm'} onClick={() => handleJoinLeague(team)} disabled={isJoining}>{isJoining ? 'Joining...' : 'Join'}</Button>
-                                            )
-                                        }
+                                        {/*<CoachTeamAction team={team} coachTeam={teams}/>*/}
+                                        {/*{*/}
+                                        {/*    league && (*/}
+                                        {/*        <Button variant={'outline'} size={'sm'} onClick={() => handleJoinLeague(team)} disabled={isJoining}>{isJoining ? 'Joining...' : 'Join'}</Button>*/}
+                                        {/*    )*/}
+                                        {/*}*/}
                                     </div>
                                 </TableCell>
                             </TableRow>

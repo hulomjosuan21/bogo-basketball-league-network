@@ -13,7 +13,7 @@ export const teamsTable = pgTable('teamsTable', {
     teamImage: text('teamImage'),
     status: jsonb('status'),
     subStatus: jsonb('subStatus'),
-    playerIds: jsonb('playerIds'),
+    players: jsonb('players'),
     gamesWon: integer('gamesWon').default(0).notNull(),
     gamesLost: integer('gamesLost').default(0).notNull(),
     gamesPlayed: integer('gamesPlayed').default(0).notNull(),

@@ -1,4 +1,5 @@
 import {BracketType} from "@/types/leagueTypes";
+import {PartialPlayer} from "@/types/playerType";
 
 export enum TEAM_STATUS {
     Active = 'Active',
@@ -34,7 +35,8 @@ export default interface Team {
     }[];
     teamName: string;
     teamMetaData: {
-        assistantCoach: string;
+        coach: string;
+        assistantCoach: string | null;
         teamCaptain: string;
         teamManager: string;
         contactNumber: string;
@@ -43,7 +45,7 @@ export default interface Team {
     teamImage: string | null;
     status: TEAM_STATUS[];
     subStatus: TEAM_SUB_STATUS[];
-    playerIds: string[];
+    players: PartialPlayer[];
 
     gamesWon: number;
     gamesLost: number;

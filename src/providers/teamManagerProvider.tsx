@@ -1,5 +1,4 @@
 import { getTeamManager, insertNewTeamManagerDataAction } from "@/actions/teamManagerActions";
-import Loading from "@/app/loading";
 import { getUser } from "@/utils/supabase/server";
 import { ReactNode } from "react";
 
@@ -16,7 +15,7 @@ export default async function TeamManagerProvider({children}:{children:ReactNode
     }
 
     if(!teamManager){
-        await insertNewTeamManagerDataAction(userData.firstName,userData.lastName,userData.userId);
+        await insertNewTeamManagerDataAction(userData.firstName,userData.lastName,user.id);
     }
     
     return (

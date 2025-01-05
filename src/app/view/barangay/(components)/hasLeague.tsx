@@ -24,7 +24,7 @@ export default function HasLeagueComponent({league,role}:Props){
         dispatch(setLeagueAppState(league));
         if(role === RoleTypes.Player){
             router.push(`/${role}`)
-        }else if(role === RoleTypes.Coach){
+        }else if(role === RoleTypes.TeamManager){
             router.push(`/${role}/page/team`)
         }else {
             router.back()

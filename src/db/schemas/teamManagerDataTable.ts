@@ -5,7 +5,6 @@ export const teamManagerTable = pgTable("teamManagerTable", {
     userId: text("userId").notNull().unique(),
     fullName: text("fullName").notNull(),
     teamManagerId: text("teamManagerId").notNull().unique(),
-    teamId: text("teamId").notNull().unique(),
     createdAt: date("createdAt").defaultNow().notNull(),
     updatedAt: date("updatedAt").defaultNow().notNull(),
 });

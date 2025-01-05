@@ -3,15 +3,40 @@
 import {db} from "@/db/database";
 import {InsertTeamsTableType, teamsTable} from "@/db/schemas/teamDataTable";
 import {eq} from "drizzle-orm";
-import {getCoach} from "@/actions/coachActions";
 import AppToolkit from "@/lib/app-toolkit";
 import Team, {TEAM_STATUS} from "@/types/teamType";
 import {revalidatePath} from "next/cache";
 import {createClient} from "@/utils/supabase/server";
 import {BracketType} from "@/types/leagueTypes";
 import {getTeamManager} from "@/actions/teamManagerActions";
+import {PartialPlayer} from "@/types/playerType";
+import {sendSmsAction} from "@/actions/sendSmsActions";
 
-export async function getAllTeamsNoCoachAction() {
+export async function getAllTeamByTeamManager(){
+    const [ {teamManager}, supabase] = await Promise.all([
+        getTeamManager(),
+        createClient()
+    ])
+
+    if(!teamManager){
+        throw new Error('No team manager found!')
+    }
+
+    const { data } = await supabase
+        .from('teamsTable')
+        .select()
+        .eq('teamManagerId', teamManager.teamManagerId)
+
+    if(!data){
+        return { teams: [] as Team[] };
+    }
+
+    const teams: Team[] = data;
+
+    return { teams };
+}
+
+export async function getAllTeamsAction() {
     const supabase = await createClient();
 
     const { data } = await supabase
@@ -27,43 +52,7 @@ export async function getAllTeamsNoCoachAction() {
     return { teams };
 }
 
-export async function getAllTeamAction(byCoach = false) {
-    try {
-        const supabase = await createClient();
-
-        if (byCoach) {
-            const { coach } = await getCoach();
-            if (coach) {
-                const { data: teams, error } = await supabase
-                    .from('teamsTable')
-                    .select()
-                    .eq('coachId', coach.coachId);
-
-                if (error) {
-                    throw error;
-                }
-
-                return teams as Team[];
-            } else {
-                return [] as Team[];
-            }
-        } else {
-            const { data: teams, error } = await supabase
-                .from('teamsTable')
-                .select();
-
-            if (error) {
-                throw error;
-            }
-
-            return teams as Team[];
-        }
-    } catch {
-        return [] as Team[];
-    }
-}
-
-export async function insertNewTeamDataAction(formData: FormData){
+export async function insertNewTeamDataAction(formData: FormData,addedPlayers: PartialPlayer[]){
     const { teamManager } = await getTeamManager()
 
     if(!teamManager){
@@ -72,19 +61,29 @@ export async function insertNewTeamDataAction(formData: FormData){
 
     const teamName = formData.get('teamName') as string;
     const teamImage = formData.get('teamImage') as string;
-    const assistantCoach = formData.get('assistantCoach') as string;
-    const teamCaptain = formData.get('assistantCoach') as string;
-    const contactNumber = formData.get('assistantCoach') as string;
-    const contactEmail = formData.get('assistantCoach');
+    const coach = formData.get('coach') as string;
+    const assistantCoach = formData.get('assistantCoach');
+    const teamCaptain = formData.get('teamCaptain') as string;
+    const contactNumber = formData.get('contactNumber') as string;
+    const contactEmail = formData.get('contactEmail');
+
+    console.log(`Team name ${teamName}`)
+    console.log(`Team image ${teamImage}`)
+    console.log(`Assistant coach ${assistantCoach}`)
+    console.log(`Team captain ${teamCaptain}`)
+    console.log(`Contact number ${contactNumber}`)
+    console.log(`Contact email ${contactEmail}`)
+    console.log(`Added players ${JSON.stringify(addedPlayers,null,2)}`)
+
 
     const newTeam: InsertTeamsTableType = {
         teamManagerId: teamManager.teamManagerId,
         teamId: AppToolkit.generateUid(teamName),
         teamName,
         teamImage,
-        teamMetaData: {assistantCoach,teamCaptain,teamManager: teamManager.fullName,contactNumber,contactEmail},
+        teamMetaData: {coach,assistantCoach,teamCaptain,teamManager: teamManager.fullName,contactNumber,contactEmail},
         status: [TEAM_STATUS.NewEntry],
-        playerIds: []
+        players: addedPlayers
     }
 
     try {
@@ -96,7 +95,6 @@ export async function insertNewTeamDataAction(formData: FormData){
     }
 }
 
-//para set og bracket type
 export async function setBracketForLeagueAction(team: Team, leagueId: string, bracket: BracketType) {
     try {
         if (!Array.isArray(team.leagueIds)) {
@@ -202,6 +200,10 @@ export async function updateLeagueTeamIdAction(team: Team, leagueId: string, isA
             return { errorMessage: `Team does not have any leagues.` };
         }
 
+        if(isAllowed) {
+            await sendSmsAction(AppToolkit.fixPhoneNumber(team.teamMetaData.contactNumber),`Team ${team.teamName} approved to participate to league`)
+        }
+
         const leagueIndex = team.leagueIds.findIndex(league => league.leagueId === leagueId);
 
         if (leagueIndex === -1) {
@@ -212,51 +214,10 @@ export async function updateLeagueTeamIdAction(team: Team, leagueId: string, isA
 
         await db.update(teamsTable).set({ leagueIds: team.leagueIds }).where(eq(teamsTable.teamId, team.teamId));
         revalidatePath('/coach/team');
+        revalidatePath('/barangayAdmin/page/team')
         return { errorMessage: null };
     } catch (error) {
         return { errorMessage: `Failed to update league in team: ${AppToolkit.getErrorMessage(error)}` };
-    }
-}
-
-export async function addPlayerAction(team: Team, playerId: string) {
-    try {
-        if (!Array.isArray(team.playerIds)) {
-            team.playerIds = [];
-        } else {
-            team.playerIds = team.playerIds as string[];
-        }
-
-        if (team.playerIds.includes(playerId)) {
-            return { errorMessage: `Player is already in the team.` };
-        }
-
-        team.playerIds.push(playerId);
-        await db.update(teamsTable).set({ playerIds: team.playerIds }).where(eq(teamsTable.teamId, team.teamId));
-        revalidatePath('/coach/team');
-        return { errorMessage: null };
-    } catch (error) {
-        return { errorMessage: `Failed to add player to team: ${AppToolkit.getErrorMessage(error)}` };
-    }
-}
-
-export async function removePlayerAction(team: Team, playerId: string) {
-    try {
-        if (!Array.isArray(team.playerIds)) {
-            return { errorMessage: `Team does not have any players.` };
-        }
-
-        team.playerIds = team.playerIds as string[];
-
-        if (!team.playerIds.includes(playerId)) {
-            return { errorMessage: `Player is not in the team.` };
-        }
-
-        team.playerIds = team.playerIds.filter(id => id !== playerId);
-        await db.update(teamsTable).set({ playerIds: team.playerIds }).where(eq(teamsTable.teamId, team.teamId));
-        revalidatePath('/coach/team');
-        return { errorMessage: null };
-    } catch (error) {
-        return { errorMessage: `Failed to remove player from team: ${AppToolkit.getErrorMessage(error)}` };
     }
 }
 

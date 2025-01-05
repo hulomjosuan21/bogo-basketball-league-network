@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import {StaticImageData} from "next/image";
 import fallBackImage from "@/assets/images/fallbackImage.png";
+import {format} from "date-fns";
 
 export default class AppToolkit {
     static getErrorMessage(error: unknown,defaultErrorMessage = 'An error occurred'): string {
@@ -11,6 +12,13 @@ export default class AppToolkit {
         } else {
             return defaultErrorMessage
         }
+    }
+
+    static fixPhoneNumber(phoneNumber: string): string {
+        if (phoneNumber.startsWith('63')) {
+            return phoneNumber;
+        }
+        return '63' + phoneNumber.slice(1);
     }
 
     static generateUid(base?: string): string {
@@ -32,24 +40,11 @@ export default class AppToolkit {
         return text || 'Text here';
     }
 
-    static dateFormatter(date: Date | string, includeTime: boolean = true, format: string = 'mm-dd-yy hh:mm'): string {
+    static dateFormatter(date: Date | string, includeTime: boolean = true, formatString: string = 'MM-dd-yyyy hh:mm a'): string {
         const d = new Date(date);
-        const pad = (n: number) => n.toString().padStart(2, '0');
+        const formatWithTime = 'MM-dd-yyyy hh:mm a';
+        const formatWithoutTime = 'MM-dd-yyyy';
 
-        const mm = pad(d.getMonth() + 1);
-        const dd = pad(d.getDate());
-        const yy = d.getFullYear().toString().slice(-2);
-        let hh = d.getHours();
-        const min = pad(d.getMinutes());
-        const ampm = hh >= 12 ? 'PM' : 'AM';
-        hh = hh % 12;
-        hh = hh ? hh : 12;
-        const paddedHh = pad(hh);
-
-        if (includeTime) {
-            return format.replace('mm', mm).replace('dd', dd).replace('yy', yy).replace('hh', paddedHh).replace('mm', min).replace('a', ampm);
-        } else {
-            return format.replace('mm', mm).replace('dd', dd).replace('yy', yy).replace(' hh:mm a', '');
-        }
+        return format(d, includeTime ? formatWithTime : formatWithoutTime);
     }
 }

@@ -1,7 +1,8 @@
 import MapDialog from "@/components/map-dialog";
 import SearchComponent from "@/components/searchComponent";
 
-export default function Page(){
+export default async function Page(){
+
     return (
         <main className={'flex justify-center'}>
             <div className={'w-[90%] sm:w-[80%] max-w-4xl mt-4'}>

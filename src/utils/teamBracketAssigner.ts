@@ -9,6 +9,9 @@ export class TeamBracketAssigner {
     constructor(teams: Team[], leagueId: string) {
         this.teams = teams;
         this.leagueId = leagueId;
+        if(teams.length < 4) {
+            throw new Error("Invalid number of teams. A minimum of 4 teams is required.");
+        }
     }
 
     async assignBrackets() {

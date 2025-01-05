@@ -9,6 +9,8 @@ export const playersTable = pgTable("playersTable", {
     id: uuid("id").defaultRandom().primaryKey(),
     userId: text("userId").notNull().unique(),
     playerId: text("playerId").notNull().unique(),
+    email: text("email").notNull(),
+    phoneNumber: text("phoneNumber").notNull(),
     fullName: text("fullName").notNull(),
     leagueMetadata: jsonb('leagueMetadata'),
     playerImage: text('playerImage'),

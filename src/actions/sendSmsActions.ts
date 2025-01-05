@@ -46,20 +46,23 @@ export async function SendMessageRequest(request:NextResponse) {
 
 
 export async function sendSmsAction(to: string, text: string) {
-    const request = {
-        json: async () => ({ to , text })
-    } as never;
+    const sendSms = false;
+    if(sendSms) {
+        const request = {
+            json: async () => ({ to , text })
+        } as never;
 
-    try {
-        const response = await SendMessageRequest(request);
-        const result = await response.json();
+        try {
+            const response = await SendMessageRequest(request);
+            const result = await response.json();
 
-        if (response.status !== 200) {
-            return { errorMessage: result.message || 'Failed to send SMS' };
+            if (response.status !== 200) {
+                return { errorMessage: result.message || 'Failed to send SMS' };
+            }
+
+            return { errorMessage: null };
+        } catch (error) {
+            return { errorMessage: AppToolkit.getErrorMessage(error,'Failed to send SMS') };
         }
-
-        return { errorMessage: null };
-    } catch (error) {
-        return { errorMessage: AppToolkit.getErrorMessage(error,'Failed to send SMS') };
     }
 }
