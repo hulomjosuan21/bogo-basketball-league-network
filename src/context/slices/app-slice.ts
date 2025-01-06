@@ -1,12 +1,19 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import League from "@/types/leagueTypes";
+import { Match } from "@/types/matchType";
 
 type AppState = {
     league?: League
+    isLive: boolean
+    gameRoute: string,
+    currentMatch: Match | null
 }
 
 const initialState: AppState = {
-    league: undefined
+    league: undefined,
+    isLive: false,
+    gameRoute: '/barangayAdmin/page/game',
+    currentMatch: null
 }
 
 const appSlice = createSlice({

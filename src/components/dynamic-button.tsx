@@ -14,7 +14,7 @@ type LoadingButtonProps = {
 
 export function LoadingButton({variant, size,type, Icon, pendingText, children, state}:LoadingButtonProps){
     return (
-        <Button variant={variant} size={size} type={type} disabled={state}>
+        <Button variant={variant} size={size} type={type} disabled={state} className="bg-pink-400 text-pink-400">
             { state && <Icon className={'animate-spin icon-sm'}/>}
             { state ? pendingText : children}
         </Button>

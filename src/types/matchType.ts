@@ -13,7 +13,7 @@ export interface Match {
     durationMinutes: number;
     location: string | null;
     leagueId: string;
-    bracket: string;
+    bracket: string;    
     notes: string;
     status: MatchStatusType;
     statistics: object;
