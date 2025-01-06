@@ -34,7 +34,7 @@ export default function Page(){
     }
 
     return (
-        <main>
+        <main className={'pb-8'}>
             <UserProfile userData={userData} gender={player.gender}/>
         </main>
     )

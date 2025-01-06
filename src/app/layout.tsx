@@ -6,7 +6,7 @@ import StoreProvider from "@/providers/store-provider";
 
 export const metadata: Metadata = {
   title: "Bogo Basketball League Network",
-  description: "Programmed by: Josuan Leonardo Hulom BSIT 3-A",
+  description: "Programmed only by: Josuan Leonardo Hulom BSIT 3-A",
 };
 
 export default function RootLayout({

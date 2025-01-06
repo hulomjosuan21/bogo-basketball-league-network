@@ -14,13 +14,16 @@ import useDriver from "@/hooks/use-driver";
 import {Info} from "lucide-react";
 import Barangay from "@/types/barangayType";
 import {GoogleMapMarkArray} from "@/components/maps";
+import AnnouncementCardOne from "@/components/announcement-card";
+import AnnouncementType from "@/types/announcementType";
+import getAllAnnouncementAction from "@/actions/announcementActions";
 
 type Props = {
     images: string[],
-    barangays: Barangay[]
+    barangays: Barangay[],
+    announcements: AnnouncementType[]
 }
-
-export default function LandingPage({images,barangays}:Props){
+export default function LandingPage({images,barangays,announcements}:Props){
     const { hasEntity, redirectToRole } = useEntity();
     const { start } = useDriver()
 
@@ -29,22 +32,22 @@ export default function LandingPage({images,barangays}:Props){
             {
                 element: '#one',
                 popover: {
-                    title: 'This is test player woman!',
-                    description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim, rem!',
+                    title: 'Test',
+                    description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quaerat, quisquam.',
                 },
             },
             {
                 element: '#two',
                 popover: {
-                    title: 'This is TestWoman!',
-                    description: 'Lorem ipsum dolor sit amet.',
+                    title: 'Test',
+                    description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quaerat, quisquam.',
                 },
             },
             {
                 element: '#three',
                 popover: {
                     title: 'Test',
-                    description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim, rem!',
+                    description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quaerat, quisquam.',
                 },
             }
         ];
@@ -109,9 +112,17 @@ export default function LandingPage({images,barangays}:Props){
             }
 
             <section className="flex w-full p-4" id={'map'}>
-                <GoogleMapMarkArray barangays={barangays} className={'w-full min-h-[60vh] rounded-lg border shadow-lg hover:border-orange-400 transition-all duration-300 ease-in-out'}/>
+                <GoogleMapMarkArray barangays={barangays}
+                                    className={'w-full min-h-[60vh] rounded-lg border shadow-lg hover:border-orange-400 transition-all duration-300 ease-in-out'}/>
             </section>
 
+            <div className={'flex gap-4 flex-wrap mt-2 justify-center'}>
+                {
+                    announcements.map((announcement, index) => (
+                        <AnnouncementCardOne key={index} announcement={announcement}/>
+                    ))
+                }
+            </div>
         </section>
     )
 }

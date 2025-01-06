@@ -65,7 +65,7 @@ export default async function Page({params}:{params:{id:string}}){
         }
     }
 
-    const { announcements } = await getAllAnnouncementAction(barangay.barangayId)
+    const { announcements } = await getAllAnnouncementAction()
 
     const { matches } = await getAllMatchByIds('leagueId', activeLeague?.leagueId as string);
 
@@ -110,7 +110,7 @@ export default async function Page({params}:{params:{id:string}}){
                             <span className={'text-center font-semibold text-lg flex justify-center w-full mb-2'}>Match Schedule</span>
 
                             <div>
-                                <BarangayMatchScheduleComponent/>
+                                <BarangayMatchScheduleComponent matches={matches}/>
                             </div>
                         </div>
                     ) : (

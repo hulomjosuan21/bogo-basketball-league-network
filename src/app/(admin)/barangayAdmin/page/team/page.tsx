@@ -124,12 +124,6 @@ export default async function Page(){
                             </div>
                         </SheetContent>
                     </Sheet>
-
-                    <Button variant={'outline'} disabled={includedTeams.length < 4} size={'sm'}>
-                        <Link href={'/barangayAdmin/page/match'}>
-                            Match Team
-                        </Link>
-                    </Button>
                 </div>
 
 

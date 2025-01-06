@@ -1,48 +1,9 @@
-'use client'
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Match, MatchStatusType} from "@/types/matchType";
-import {Badge} from "@/components/ui/badge";
 import AppToolkit from "@/lib/app-toolkit";
-import {useEffect, useState} from "react";
-import {createClient} from "@/utils/supabase/server";
+import { Badge } from "@/components/ui/badge";
 
-export default function BarangayMatchScheduleComponent(){
-    const [matches, setMatches] = useState<Match[]>([]);
-
-    useEffect(() => {
-
-        const setupSupabase = async () => {
-            const supabase = await createClient(); // Create the Supabase client
-
-            const fetchMatches = async () => {
-                const { data, error } = await supabase
-                    .from("matchesTable")
-                    .select("*");
-
-                if (error) {
-                    console.error("Error fetching matches:", error);
-                } else {
-                    setMatches(data);
-                }
-            };
-
-            await fetchMatches();
-
-            supabase
-                .channel("realtime:matchesTable")
-                .on(
-                    "postgres_changes",
-                    { event: "*", schema: "public", table: "matchesTable" },
-                    (payload) => {
-                        console.log("Change received!", payload);
-                        fetchMatches(); // Re-fetch matches after an update
-                    }
-                )
-                .subscribe();
-        };
-
-        setupSupabase();
-    }, []);
+export default function BarangayMatchScheduleComponent({matches}:{matches: Match[]}){
 
     const matchTable = () => {
         if(matches.length > 0){

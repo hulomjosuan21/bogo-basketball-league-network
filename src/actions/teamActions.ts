@@ -36,6 +36,33 @@ export async function getAllTeamByTeamManager(){
     return { teams };
 }
 
+export async function getTeamsByPlayerId(playerId: string): Promise<Team[]> {
+    try {
+        const supabase = await createClient();
+        const { data, error } = await supabase
+            .from('teamsTable')
+            .select('*');
+
+        if (error) {
+            throw error;
+        }
+
+        if (!data) {
+            return [];
+        }
+
+        // Filter teams to include only those with a matching playerId in players array
+        const filteredTeams: Team[] = data.filter((team: Team) =>
+            team.players.some((player: PartialPlayer) => player.playerId === playerId)
+        );
+
+        return filteredTeams;
+    } catch (err) {
+        console.error('Error fetching teams by playerId:', err);
+        return [];
+    }
+}
+
 export async function getAllTeamsAction() {
     const supabase = await createClient();
 

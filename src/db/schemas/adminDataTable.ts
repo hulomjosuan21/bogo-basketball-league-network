@@ -8,11 +8,11 @@ export const adminDataTable = pgTable("adminData", {
     barangayName: text("barangayName").notNull().unique(),
     address: text("address").notNull(),
     phoneNumber: text("phoneNumber").notNull(),
-    role: text("role").default(RoleTypes.BarangayAdmin).notNull(),
+    role: text("role").default(RoleTypes.BarangayAdmin),
     barangayImage: text("barangayImage"),
-    createdAt: date("createdAt").defaultNow().notNull(),
-    updatedAt: date("updatedAt").defaultNow().notNull(),
-    isAllowed: boolean("isAllowed").default(false).notNull()
+    createdAt: date("createdAt").defaultNow(),
+    updatedAt: date("updatedAt").defaultNow(),
+    isAllowed: boolean("isAllowed").default(false)
 });
 
 export type SelectAdminDataType = typeof adminDataTable.$inferSelect;

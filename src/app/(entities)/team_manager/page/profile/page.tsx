@@ -1,27 +1,31 @@
 'use client'
-import {Button} from "@/components/ui/button";
-import {signOutAction} from "@/actions/appActions";
 import Loading from "@/app/loading";
-import {useTransition} from "react";
+import useUserData from "@/hooks/use-userData";
+import UserProfile from "@/components/user-profile";
+import {GenderTypes} from "@/lib/utils";
 
 export default function Page(){
-    const [isPending, startTransition] = useTransition()
+    const { userData, user, isLoading, error} = useUserData();
 
-    const handleSignOut = () => {
-        startTransition(async () => {
-            await signOutAction('/auth/signin')
-        })
+    if(isLoading){
+        return <Loading height={'h-[calc(100vh-90px)]'}/>
     }
 
-    if(isPending){
-        return <Loading text={'Signing you out...'} height={'h-[calc(100vh-90px)]'}/>
+    if(error){
+        throw new Error(error);
+    }
+
+    if(!userData){
+        throw new Error("No user data!");
+    }
+
+    if(!user){
+        throw new Error("Not signed in!");
     }
 
     return (
-        <main>
-            <div className={'flex justify-center items-center flex-col gap-4 mt-4'}>
-                <Button onClick={handleSignOut}>Sign out</Button>
-            </div>
+        <main className={'pb-8'}>
+            <UserProfile userData={userData} gender={GenderTypes.Other}/>
         </main>
     )
 }

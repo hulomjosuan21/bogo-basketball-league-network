@@ -26,6 +26,7 @@ import {
   } from "@/components/ui/alert-dialog"
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {useRouter} from "next/navigation";
   
 type Props = {
     teams: ToMatchTeam[],
@@ -36,6 +37,7 @@ type Props = {
 export default function TournamentBracket({teams,league,matches}:Props) {
     const [isPending, startTransition] = useTransition()
     const { showToast } = useAppToast();
+    const router = useRouter();
     const [matchUp, setMatchUp] = useState<MatchUp>({
         homeTeam: null,
         awayTeam: null,
@@ -178,7 +180,7 @@ export default function TournamentBracket({teams,league,matches}:Props) {
                                    <TableCell>
                                        <div className={'flex items-center gap-2 justify-end'}>
                                            <Button variant={'outline'} size={'sm'} onClick={() => handleCancelMatch(match.matchId)}>Cancel</Button>
-                                           <Button size={'sm'}>Start</Button>
+                                           <Button size={'sm'} onClick={() => router.push('/barangayAdmin/page/game')}>Start</Button>
                                        </div>
                                    </TableCell>
                                </TableRow>
