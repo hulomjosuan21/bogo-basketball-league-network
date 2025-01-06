@@ -27,12 +27,14 @@ import {
 } from "@/components/ui/alert-dialog"
 import {addLeagueIdAction} from "@/actions/teamActions";
 import Link from "next/link";
+import {useRouter} from "next/navigation";
 
 type Props = {
     team: Team
 }
 
 export default function TeamCard({team}:Props){
+    const router = useRouter();
     const { league } = useSelector((state: RootState) => state.app)
     const { showToast } = useAppToast()
     const [isOpen,setIsOpen] = useState(false)
@@ -103,7 +105,7 @@ export default function TeamCard({team}:Props){
                                 <Button size={'sm'} onClick={cardClick}>Submit Team</Button>
                             )
                         }
-                        <Button size={'sm'} variant={'secondary'}>View Team</Button>
+                        <Button size={'sm'} variant={'secondary'} onClick={() => router.push(`/team_manager/page/team/manage/${team.id}`)}>Manage Team</Button>
                     </div>
                 </CardFooter>
             </Card>

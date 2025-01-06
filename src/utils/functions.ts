@@ -3,3 +3,11 @@ export const shareToFacebook = (url: string) => {
     window.open(fbShareUrl, '_blank');
 };
 //  --experimental-https
+export function shareToInstagram(url?: string) {
+    alert('Instagram sharing is not supported directly.');
+}
+
+export function shareToTwitter(url: string) {
+    window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}`, '_blank');
+    window.open(url, '_blank');
+}

@@ -11,6 +11,7 @@ import {BracketType} from "@/types/leagueTypes";
 import {getTeamManager} from "@/actions/teamManagerActions";
 import {PartialPlayer} from "@/types/playerType";
 import {sendSmsAction} from "@/actions/sendSmsActions";
+import {supabase} from "@supabase/auth-ui-shared";
 
 export async function getAllTeamByTeamManager(){
     const [ {teamManager}, supabase] = await Promise.all([
@@ -34,6 +35,23 @@ export async function getAllTeamByTeamManager(){
     const teams: Team[] = data;
 
     return { teams };
+}
+
+export default async function getTeamById(id: string){
+    const supabase = await createClient();
+    const { data } = await supabase
+        .from('teamsTable')
+        .select('*')
+        .eq('id', id)
+        .single()
+
+    if(!data) {
+        throw new Error('No found team!')
+    }
+
+    const team: Team = data
+
+    return { team }
 }
 
 export async function getTeamsByPlayerId(playerId: string): Promise<Team[]> {
@@ -248,12 +266,21 @@ export async function updateLeagueTeamIdAction(team: Team, leagueId: string, isA
     }
 }
 
-export async function updateTeamAction(teamId: string, value: object){
+export async function updateTeamAction(teamId: string, value: Partial<InsertTeamsTableType>){
     try{
         await db.update(teamsTable).set(value).where(eq(teamsTable.teamId, teamId));
         return { errorMessage: null };
     }catch (error){
         return { errorMessage: `Failed to update team: ${AppToolkit.getErrorMessage(error)}` };
+    }
+}
+
+export async function updateTeamPlayersAction(teamId: string, players: PartialPlayer[]) {
+    try {
+        await db.update(teamsTable).set({ players }).where(eq(teamsTable.teamId, teamId));
+        return { errorMessage: null };
+    } catch (error) {
+        return { errorMessage: `Failed to update team players: ${AppToolkit.getErrorMessage(error)}` };
     }
 }
 
